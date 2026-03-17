@@ -2,21 +2,26 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+SDL_Color green = {0, 200, 0, 255};
+SDL_Color red   = {220, 0, 0, 255};
+SDL_Color blue  = {0, 0, 220, 255};
+
 struct TaskSlot {
     std::string label;
     bool unlocked;
-    int type; // 0=stock, 1=army, 2=relations
+    int type;
+    int val1, val2, val3;
+    float progress; // 0.0 to 1.0
 };
 
 TaskSlot taskSlots[] = {
-    {"Mine Iron",  true,  0},
-    {"",           false, 0},
-    {"Archers",    true,  1},
-    {"",           false, 1},
-    {"Merchant",   true,  2},
-    {"",           false, 2}
+    {"Mine Iron",  true,  0, 4, 3, 3, 0.6f},
+    {"",           false, 0, 0, 0, 0, 0.0f},
+    {"Archers",    true,  1, 0, 5, 0, 0.3f},
+    {"",           false, 1, 0, 0, 0, 0.0f},
+    {"Merchant",   true,  2, 0, 0, 3, 0.5f},
+    {"",           false, 2, 0, 0, 0, 0.0f}
 };
-
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -179,14 +184,46 @@ int main() {
             SDL_RenderFillRect(renderer, &taskRow);
         }
 
+        // task slot loop
         for (int i = 0; i < 6; i++) {
             if (taskSlots[i].unlocked) {
-                SDL_Surface* taskSurface = TTF_RenderText_Solid(font, taskSlots[i].label.c_str(), white);
-                SDL_Texture* taskTexture = SDL_CreateTextureFromSurface(renderer, taskSurface);
-                SDL_Rect taskTextRect = {760, 105 + (i * 55), taskSurface->w, taskSurface->h};
-                SDL_RenderCopy(renderer, taskTexture, NULL, &taskTextRect);
-                SDL_FreeSurface(taskSurface);
-                SDL_DestroyTexture(taskTexture);
+                SDL_Surface* v1 = TTF_RenderText_Solid(font, std::to_string(taskSlots[i].val1).c_str(), green);
+                SDL_Texture* t1 = SDL_CreateTextureFromSurface(renderer, v1);
+                SDL_Rect r1 = {747, 97 + (i * 55), v1->w, v1->h};
+                SDL_RenderCopy(renderer, t1, NULL, &r1);
+                SDL_FreeSurface(v1);
+                SDL_DestroyTexture(t1);
+
+                SDL_Surface* v2 = TTF_RenderText_Solid(font, std::to_string(taskSlots[i].val2).c_str(), red);
+                SDL_Texture* t2 = SDL_CreateTextureFromSurface(renderer, v2);
+                SDL_Rect r2 = {770, 97 + (i * 55), v2->w, v2->h};
+                SDL_RenderCopy(renderer, t2, NULL, &r2);
+                SDL_FreeSurface(v2);
+                SDL_DestroyTexture(t2);
+
+                SDL_Surface* v3 = TTF_RenderText_Solid(font, std::to_string(taskSlots[i].val3).c_str(), blue);
+                SDL_Texture* t3 = SDL_CreateTextureFromSurface(renderer, v3);
+                SDL_Rect r3 = {793, 97 + (i * 55), v3->w, v3->h};
+                SDL_RenderCopy(renderer, t3, NULL, &r3);
+                SDL_FreeSurface(v3);
+                SDL_DestroyTexture(t3);
+
+                // Progress bar background
+                SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+                SDL_Rect progressBg = {745, 118 + (i * 55), 274, 8};
+                SDL_RenderFillRect(renderer, &progressBg);
+
+                // Progress bar fill
+                SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
+                SDL_Rect progressFill = {745, 118 + (i * 55), (int)(274 * taskSlots[i].progress), 8};
+                SDL_RenderFillRect(renderer, &progressFill);
+
+                SDL_Surface* labelSurface = TTF_RenderText_Solid(font, taskSlots[i].label.c_str(), white);
+                SDL_Texture* labelTexture = SDL_CreateTextureFromSurface(renderer, labelSurface);
+                SDL_Rect labelRect = {820, 97 + (i * 55), labelSurface->w, labelSurface->h};
+                SDL_RenderCopy(renderer, labelTexture, NULL, &labelRect);
+                SDL_FreeSurface(labelSurface);
+                SDL_DestroyTexture(labelTexture);
             }
         }
         
