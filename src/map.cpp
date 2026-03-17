@@ -47,7 +47,7 @@ void Map::handleClick(int x, int y) {
     }
 }
 
-void Map::render(SDL_Renderer* renderer) {
+void Map::render(SDL_Renderer* renderer, TTF_Font* font) {
     for (auto& p : provinces) {
         if (p.isSelected) {
             SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
@@ -61,5 +61,25 @@ void Map::render(SDL_Renderer* renderer) {
                 p.polygon[i].x, p.polygon[i].y,
                 p.polygon[j].x, p.polygon[j].y);
         }
+    }
+    for (auto& p : provinces) {
+        if (p.polygon.empty()) continue;
+
+        // Calculate center of province for label placement
+        int cx = 0, cy = 0;
+        for (auto& pt : p.polygon) {
+            cx += pt.x;
+            cy += pt.y;
+        }
+        cx /= p.polygon.size();
+        cy /= p.polygon.size();
+
+        SDL_Color yellow = {255, 215, 0, 255};
+        SDL_Surface* s = TTF_RenderText_Solid(font, p.name.c_str(), yellow);
+        SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+        SDL_Rect r = {cx - s->w / 2, cy - s->h / 2, s->w, s->h};
+        SDL_RenderCopy(renderer, t, NULL, &r);
+        SDL_FreeSurface(s);
+        SDL_DestroyTexture(t);
     }
 }

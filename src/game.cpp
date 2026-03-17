@@ -26,5 +26,5 @@ void Game::update() {
 
 void Game::render(SDL_Renderer* renderer, TTF_Font* font) {
     renderUI(renderer, font, activeTab);
-    map.render(renderer);
+    map.render(renderer, font);
 }
