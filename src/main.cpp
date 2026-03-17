@@ -23,10 +23,29 @@ int main() {
 
     SDL_Event event;
     bool running = true;
+    int activeTab = 0; // 0=STOCK, 1=ARMY, 2=RELAT, 3=OPTS
+
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
+
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+                // SDL_Log("Active tab: %d", activeTab);
+                int x = event.button.x;
+                int y = event.button.y;
+
+                if (y >= 80 && y <= 120) {
+                    if (x >= 740 && x < 811) activeTab = 0;
+                    else if (x >= 811 && x < 882) activeTab = 1;
+                    else if (x >= 882 && x < 953) activeTab = 2;
+                    else if (x >= 953 && x < 1024) activeTab = 3;
+                }
+            }
         }
+
+        // Clear screen before rendering ui
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
 
         // Top bar - dark gray
         SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
@@ -60,22 +79,22 @@ int main() {
 
         // add rectangles for task labels
         // STOCK - green
-        SDL_SetRenderDrawColor(renderer, 0, 120, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 0, activeTab == 0 ? 200 : 120, 0, 255);
         SDL_Rect stockTab = {740, 80, 71, 40};
         SDL_RenderFillRect(renderer, &stockTab);
 
         // ARMY - red
-        SDL_SetRenderDrawColor(renderer, 150, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, activeTab == 1 ? 220 : 150, 0, 0, 255);
         SDL_Rect armyTab = {811, 80, 71, 40};
         SDL_RenderFillRect(renderer, &armyTab);
 
         // RELAT - blue
-        SDL_SetRenderDrawColor(renderer, 0, 0, 150, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, activeTab == 2 ? 220 : 150, 255);
         SDL_Rect relatTab = {882, 80, 71, 40};
         SDL_RenderFillRect(renderer, &relatTab);
 
         // OPTS - brown
-        SDL_SetRenderDrawColor(renderer, 101, 67, 33, 255);
+        SDL_SetRenderDrawColor(renderer, activeTab == 3 ? 160 : 101, activeTab == 3 ? 100 : 67, activeTab == 3 ? 50 : 33, 255);
         SDL_Rect optsTab = {953, 80, 71, 40};
         SDL_RenderFillRect(renderer, &optsTab);
 
@@ -121,5 +140,6 @@ int main() {
     SDL_DestroyWindow(window);
     TTF_CloseFont(font);
     SDL_Quit();
+    
     return 0;
 }
