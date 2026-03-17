@@ -10,5 +10,6 @@ find_package(nlohmann_json REQUIRED)
 add_executable(castles3 src/main.cpp src/ui.cpp src/map.cpp src/game.cpp)
 
 file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR}) # add data folder to build directory
+file(COPY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}) # add fonts to build directory
 
 target_link_libraries(castles3 SDL2::SDL2 SDL2_ttf::SDL2_ttf nlohmann_json::nlohmann_json)

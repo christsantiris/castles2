@@ -6,7 +6,7 @@ int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    TTF_Font* font = TTF_OpenFont("/System/Library/Fonts/NewYork.ttf", 18);
+    TTF_Font* font = TTF_OpenFont("fonts/MedievalSharp-Regular.ttf", 18);
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
         return 1;
