@@ -8,6 +8,30 @@ SDL_Color blue  = {0, 0, 220, 255};
 SDL_Color yellow = {255, 215, 0, 255};
 SDL_Color white = {255, 255, 255, 255};
 
+enum IconType { TASK, UNIT, RESOURCE };
+struct TopBarIcon {
+    SDL_Color bgColor;
+    int used;
+    int total;
+    IconType type;
+};
+
+TopBarIcon topBarIcons[] = {
+    {{0, 120, 0, 255},   4,  4, TASK},      // stock 1
+    {{0, 120, 0, 255},   4,  4, TASK},      // stock 2
+    {{150, 0, 0, 255},   4,  4, TASK},      // army 1
+    {{150, 0, 0, 255},   4,  4, TASK},      // army 2
+    {{0, 0, 150, 255},   4,  4, TASK},      // relations 1
+    {{0, 0, 150, 255},   4,  4, TASK},      // relations 2
+    {{150, 0, 0, 255},   0,  4, UNIT},      // infantry units
+    {{150, 0, 0, 255},   0,  4, UNIT},      // archer units
+    {{150, 0, 0, 255},   0,  4, UNIT},      // knight units
+    {{0, 120, 0, 255},   4,  4, RESOURCE},  // food resource
+    {{0, 120, 0, 255},   4,  6, RESOURCE},  // timber resource
+    {{0, 120, 0, 255},   6,  6, RESOURCE},  // iron resource
+    {{0, 120, 0, 255},   6,  6, RESOURCE},  // gold resource
+};
+
 struct TaskSlot {
     std::string label;
     bool unlocked;
@@ -228,6 +252,40 @@ int main() {
             }
         }
         
+        // draw top nav boxes
+        for (int i = 0; i < 13; i++) {
+            // Icon background
+            SDL_SetRenderDrawColor(renderer, 
+                topBarIcons[i].bgColor.r, 
+                topBarIcons[i].bgColor.g, 
+                topBarIcons[i].bgColor.b, 255);
+            SDL_Rect iconBg = {5 + (i * 60), 5, 55, 65};
+            SDL_RenderFillRect(renderer, &iconBg);
+
+            if (topBarIcons[i].type == TASK) {
+                SDL_Surface* usedSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].used).c_str(), yellow);
+                SDL_Texture* usedTexture = SDL_CreateTextureFromSurface(renderer, usedSurface);
+                SDL_Rect usedRect = {40 + (i * 60), 10, usedSurface->w, usedSurface->h};
+                SDL_RenderCopy(renderer, usedTexture, NULL, &usedRect);
+                SDL_FreeSurface(usedSurface);
+                SDL_DestroyTexture(usedTexture);
+
+                SDL_Surface* totalSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].total).c_str(), yellow);
+                SDL_Texture* totalTexture = SDL_CreateTextureFromSurface(renderer, totalSurface);
+                SDL_Rect totalRect = {40 + (i * 60), 40, totalSurface->w, totalSurface->h};
+                SDL_RenderCopy(renderer, totalTexture, NULL, &totalRect);
+                SDL_FreeSurface(totalSurface);
+                SDL_DestroyTexture(totalTexture);
+            } else {
+                SDL_Surface* totalSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].total).c_str(), yellow);
+                SDL_Texture* totalTexture = SDL_CreateTextureFromSurface(renderer, totalSurface);
+                SDL_Rect totalRect = {40 + (i * 60), 40, totalSurface->w, totalSurface->h};
+                SDL_RenderCopy(renderer, totalTexture, NULL, &totalRect);
+                SDL_FreeSurface(totalSurface);
+                SDL_DestroyTexture(totalTexture);
+            }
+        }
+
         // draw ui
         SDL_RenderPresent(renderer);
     }
