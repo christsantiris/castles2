@@ -138,6 +138,7 @@ int main() {
         SDL_RenderFillRect(renderer, &infoPanel);
 
         // statistics pannel
+        //date
         SDL_Surface* dateSurface = TTF_RenderText_Solid(font, "May 2, 1312", white);
         SDL_Texture* dateTexture = SDL_CreateTextureFromSurface(renderer, dateSurface);
         SDL_Rect dateRect = {750, 600, dateSurface->w, dateSurface->h};
@@ -145,12 +146,21 @@ int main() {
         SDL_FreeSurface(dateSurface);
         SDL_DestroyTexture(dateTexture);
 
+        // score
         SDL_Surface* scoreSurface = TTF_RenderText_Solid(font, "Score: 1000", white);
         SDL_Texture* scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreSurface);
         SDL_Rect scoreRect = {750, 640, scoreSurface->w, scoreSurface->h};
         SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect);
         SDL_FreeSurface(scoreSurface);
         SDL_DestroyTexture(scoreTexture);
+
+        // title
+        SDL_Surface* titleSurface = TTF_RenderText_Solid(font, "Castles II", white);
+        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
+        SDL_Rect titleRect = {750, 500, titleSurface->w, titleSurface->h};
+        SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
+        SDL_FreeSurface(titleSurface);
+        SDL_DestroyTexture(titleTexture);
         
         // draw ui
         SDL_RenderPresent(renderer);
