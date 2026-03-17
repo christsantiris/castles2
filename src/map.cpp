@@ -48,12 +48,30 @@ void Map::handleClick(int x, int y) {
 }
 
 void Map::render(SDL_Renderer* renderer, TTF_Font* font) {
+    // Fill provinces
     for (auto& p : provinces) {
-        if (p.isSelected) {
+        if (p.name == "Aegean Sea") { // Creating ocean as province to make rendering simpler
+            SDL_SetRenderDrawColor(renderer, 30, 80, 150, 255);
+        } else if (p.isSelected) {
             SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
         } else {
-            SDL_SetRenderDrawColor(renderer, 200, 170, 50, 255);
+            SDL_SetRenderDrawColor(renderer, 34, 85, 34, 255);
         }
+        int minX = p.polygon[0].x, minY = p.polygon[0].y;
+        int maxX = p.polygon[0].x, maxY = p.polygon[0].y;
+        for (auto& pt : p.polygon) {
+            minX = std::min(minX, pt.x);
+            minY = std::min(minY, pt.y);
+            maxX = std::max(maxX, pt.x);
+            maxY = std::max(maxY, pt.y);
+        }
+        SDL_Rect fill = {minX, minY, maxX - minX, maxY - minY};
+        SDL_RenderFillRect(renderer, &fill);
+    }
+
+    // Draw province borders
+    for (auto& p : provinces) {
+        SDL_SetRenderDrawColor(renderer, 200, 170, 50, 255);
         int n = p.polygon.size();
         for (int i = 0; i < n; i++) {
             int j = (i + 1) % n;
@@ -62,10 +80,10 @@ void Map::render(SDL_Renderer* renderer, TTF_Font* font) {
                 p.polygon[j].x, p.polygon[j].y);
         }
     }
+
+    // Draw province labels
     for (auto& p : provinces) {
         if (p.polygon.empty()) continue;
-
-        // Calculate center of province for label placement
         int cx = 0, cy = 0;
         for (auto& pt : p.polygon) {
             cx += pt.x;
