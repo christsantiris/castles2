@@ -9,27 +9,30 @@ SDL_Color yellow = {255, 215, 0, 255};
 SDL_Color white = {255, 255, 255, 255};
 
 enum IconType { TASK, UNIT, RESOURCE };
+enum IconShape { CASTLE, SWORD, SHIELD, HELMET, SCROLL, ARROW, CIRCLE, TRIANGLE, SQUARE, DIAMOND };
+
 struct TopBarIcon {
     SDL_Color bgColor;
     int used;
     int total;
     IconType type;
+    IconShape shape;
 };
 
 TopBarIcon topBarIcons[] = {
-    {{0, 120, 0, 255},   4,  4, TASK},      // stock 1
-    {{0, 120, 0, 255},   4,  4, TASK},      // stock 2
-    {{150, 0, 0, 255},   4,  4, TASK},      // army 1
-    {{150, 0, 0, 255},   4,  4, TASK},      // army 2
-    {{0, 0, 150, 255},   4,  4, TASK},      // relations 1
-    {{0, 0, 150, 255},   4,  4, TASK},      // relations 2
-    {{150, 0, 0, 255},   0,  4, UNIT},      // infantry units
-    {{150, 0, 0, 255},   0,  4, UNIT},      // archer units
-    {{150, 0, 0, 255},   0,  4, UNIT},      // knight units
-    {{0, 120, 0, 255},   4,  4, RESOURCE},  // food resource
-    {{0, 120, 0, 255},   4,  6, RESOURCE},  // timber resource
-    {{0, 120, 0, 255},   6,  6, RESOURCE},  // iron resource
-    {{0, 120, 0, 255},   6,  6, RESOURCE},  // gold resource
+    {{0, 120, 0, 255},   4,  4, TASK,     CASTLE},   // stock 1
+    {{0, 120, 0, 255},   4,  4, TASK,     CASTLE},   // stock 2
+    {{150, 0, 0, 255},   4,  4, TASK,     SWORD},    // army 1
+    {{150, 0, 0, 255},   4,  4, TASK,     SWORD},    // army 2
+    {{0, 0, 150, 255},   4,  4, TASK,     SCROLL},   // relations 1
+    {{0, 0, 150, 255},   4,  4, TASK,     SCROLL},   // relations 2
+    {{150, 0, 0, 255},   0,  4, UNIT,     SWORD},    // infantry
+    {{150, 0, 0, 255},   0,  4, UNIT,     ARROW},    // archers
+    {{150, 0, 0, 255},   0,  4, UNIT,     SHIELD},   // knights
+    {{0, 120, 0, 255},   4,  4, RESOURCE, CIRCLE},   // food
+    {{0, 120, 0, 255},   4,  6, RESOURCE, TRIANGLE}, // timber
+    {{0, 120, 0, 255},   6,  6, RESOURCE, DIAMOND},  // iron
+    {{0, 120, 0, 255},   6,  6, RESOURCE, CIRCLE},   // gold
 };
 
 struct TaskSlot {
@@ -48,6 +51,56 @@ TaskSlot taskSlots[] = {
     {"Merchant",   true,  2, 0, 0, 3, 0.5f},
     {"",           false, 2, 0, 0, 0, 0.0f}
 };
+
+// used for drawing placeholder icons. Can remove once real icons are implemented
+void drawShape(SDL_Renderer* renderer, IconShape shape, int x, int y) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    switch (shape) {
+        case CASTLE:
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x, y+5, 20, 20});
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+3, y, 5, 7});
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+12, y, 5, 7});
+            break;
+        case SWORD:
+            SDL_RenderDrawLine(renderer, x+10, y, x+10, y+20);
+            SDL_RenderDrawLine(renderer, x+5, y+8, x+15, y+8);
+            break;
+        case SHIELD:
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+3, y, 14, 18});
+            break;
+        case HELMET:
+            SDL_RenderDrawLine(renderer, x+3, y+10, x+17, y+10);
+            SDL_RenderDrawLine(renderer, x+3, y+10, x+5, y+20);
+            SDL_RenderDrawLine(renderer, x+17, y+10, x+15, y+20);
+            break;
+        case SCROLL:
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+3, y+3, 14, 18});
+            SDL_RenderDrawLine(renderer, x+3, y+3, x+3, y+21);
+            break;
+        case ARROW:
+            SDL_RenderDrawLine(renderer, x+10, y, x+10, y+20);
+            SDL_RenderDrawLine(renderer, x+10, y, x+5, y+8);
+            SDL_RenderDrawLine(renderer, x+10, y, x+15, y+8);
+            break;
+        case CIRCLE:
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+3, y+3, 14, 14});
+            break;
+        case TRIANGLE:
+            SDL_RenderDrawLine(renderer, x+10, y, x+3, y+20);
+            SDL_RenderDrawLine(renderer, x+10, y, x+17, y+20);
+            SDL_RenderDrawLine(renderer, x+3, y+20, x+17, y+20);
+            break;
+        case SQUARE:
+            SDL_RenderDrawRect(renderer, new SDL_Rect{x+3, y+3, 14, 14});
+            break;
+        case DIAMOND:
+            SDL_RenderDrawLine(renderer, x+10, y, x+17, y+10);
+            SDL_RenderDrawLine(renderer, x+17, y+10, x+10, y+20);
+            SDL_RenderDrawLine(renderer, x+10, y+20, x+3, y+10);
+            SDL_RenderDrawLine(renderer, x+3, y+10, x+10, y);
+            break;
+    }
+}
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -254,15 +307,27 @@ int main() {
         
         // draw top nav boxes
         for (int i = 0; i < 13; i++) {
-            // Icon background
-            SDL_SetRenderDrawColor(renderer, 
-                topBarIcons[i].bgColor.r, 
-                topBarIcons[i].bgColor.g, 
-                topBarIcons[i].bgColor.b, 255);
-            SDL_Rect iconBg = {5 + (i * 60), 5, 55, 65};
-            SDL_RenderFillRect(renderer, &iconBg);
-
             if (topBarIcons[i].type == TASK) {
+                // Icon portion - colored background
+                SDL_SetRenderDrawColor(renderer, 
+                    topBarIcons[i].bgColor.r, 
+                    topBarIcons[i].bgColor.g, 
+                    topBarIcons[i].bgColor.b, 255);
+                SDL_Rect iconBg = {5 + (i * 60), 5, 35, 65};
+                SDL_RenderFillRect(renderer, &iconBg);
+
+                // Number portion - darker background
+                SDL_SetRenderDrawColor(renderer, 
+                    topBarIcons[i].bgColor.r * 0.6, 
+                    topBarIcons[i].bgColor.g * 0.6, 
+                    topBarIcons[i].bgColor.b * 0.6, 255);
+                SDL_Rect numberBg = {40 + (i * 60), 5, 20, 65};
+                SDL_RenderFillRect(renderer, &numberBg);
+
+                // Draw shape in icon portion
+                drawShape(renderer, topBarIcons[i].shape, 5 + (i * 60), 10);
+
+                // Used number - top right
                 SDL_Surface* usedSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].used).c_str(), yellow);
                 SDL_Texture* usedTexture = SDL_CreateTextureFromSurface(renderer, usedSurface);
                 SDL_Rect usedRect = {40 + (i * 60), 10, usedSurface->w, usedSurface->h};
@@ -270,6 +335,7 @@ int main() {
                 SDL_FreeSurface(usedSurface);
                 SDL_DestroyTexture(usedTexture);
 
+                // Total number - bottom right
                 SDL_Surface* totalSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].total).c_str(), yellow);
                 SDL_Texture* totalTexture = SDL_CreateTextureFromSurface(renderer, totalSurface);
                 SDL_Rect totalRect = {40 + (i * 60), 40, totalSurface->w, totalSurface->h};
@@ -277,6 +343,18 @@ int main() {
                 SDL_FreeSurface(totalSurface);
                 SDL_DestroyTexture(totalTexture);
             } else {
+                // Single colored background
+                SDL_SetRenderDrawColor(renderer, 
+                    topBarIcons[i].bgColor.r, 
+                    topBarIcons[i].bgColor.g, 
+                    topBarIcons[i].bgColor.b, 255);
+                SDL_Rect iconBg = {5 + (i * 60), 5, 55, 65};
+                SDL_RenderFillRect(renderer, &iconBg);
+
+                // Draw shape
+                drawShape(renderer, topBarIcons[i].shape, 5 + (i * 60), 10);
+
+                // Single number - bottom right
                 SDL_Surface* totalSurface = TTF_RenderText_Solid(font, std::to_string(topBarIcons[i].total).c_str(), yellow);
                 SDL_Texture* totalTexture = SDL_CreateTextureFromSurface(renderer, totalSurface);
                 SDL_Rect totalRect = {40 + (i * 60), 40, totalSurface->w, totalSurface->h};
