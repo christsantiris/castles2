@@ -1,5 +1,21 @@
+#include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+
+struct TaskSlot {
+    std::string label;
+    bool unlocked;
+    int type; // 0=stock, 1=army, 2=relations
+};
+
+TaskSlot taskSlots[] = {
+    {"Mine Iron",  true,  0},
+    {"",           false, 0},
+    {"Archers",    true,  1},
+    {"",           false, 1},
+    {"Merchant",   true,  2},
+    {"",           false, 2}
+};
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -57,25 +73,10 @@ int main() {
         SDL_Rect mapArea = {6, 86, 728, 676};
         SDL_RenderFillRect(renderer, &mapArea);
 
-        // Right sidebar - gray color
-        // SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
-        // SDL_Rect sidebar = {740, 85, 279, 678};
-        // SDL_RenderFillRect(renderer, &sidebar);
-
         // Map border - gold color
         SDL_SetRenderDrawColor(renderer, 200, 170, 50, 255);
         SDL_Rect mapBorder = {5, 85, 730, 678};
         SDL_RenderDrawRect(renderer, &mapBorder);
-
-        // Sidebar border - dark gray
-        // SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
-        // SDL_Rect sidebarBorder = {740, 80, 284, 688};
-        // SDL_RenderDrawRect(renderer, &sidebarBorder);
-
-        // Tab bar background - dark brown
-        SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
-        SDL_Rect tabBar = {740, 80, 284, 40};
-        SDL_RenderFillRect(renderer, &tabBar);
 
         // add rectangles for task labels
         // STOCK - green
@@ -166,6 +167,17 @@ int main() {
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
         SDL_FreeSurface(titleSurface);
         SDL_DestroyTexture(titleTexture);
+
+        // dynamic task progress bars
+        for (int i = 0; i < 6; i++) {
+            if (taskSlots[i].unlocked) {
+                SDL_SetRenderDrawColor(renderer, 80, 45, 10, 255);
+            } else {
+                SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
+            }
+            SDL_Rect taskRow = {745, 90 + (i * 55), 274, 45};
+            SDL_RenderFillRect(renderer, &taskRow);
+        }
         
         // draw ui
         SDL_RenderPresent(renderer);
