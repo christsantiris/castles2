@@ -34,7 +34,7 @@ int main() {
                 int x = event.button.x;
                 int y = event.button.y;
 
-                if (y >= 80 && y <= 120) {
+                if (y >= 424 && y <= 464) {
                     if (x >= 740 && x < 811) activeTab = 0;
                     else if (x >= 811 && x < 882) activeTab = 1;
                     else if (x >= 882 && x < 953) activeTab = 2;
@@ -44,33 +44,33 @@ int main() {
         }
 
         // Clear screen before rendering ui
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
         SDL_RenderClear(renderer);
 
         // Top bar - dark gray
         SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
-        SDL_Rect topBar = {0, 0, 1024, 80};
+        SDL_Rect topBar = {5, 5, 1014, 70};
         SDL_RenderFillRect(renderer, &topBar);
 
         // Main map area - dark green
         SDL_SetRenderDrawColor(renderer, 34, 85, 34, 255);
-        SDL_Rect mapArea = {0, 80, 740, 688};
+        SDL_Rect mapArea = {6, 86, 728, 676};
         SDL_RenderFillRect(renderer, &mapArea);
 
-        // Right sidebar - gray stone color
-        SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
-        SDL_Rect sidebar = {740, 80, 284, 688};
-        SDL_RenderFillRect(renderer, &sidebar);
+        // Right sidebar - gray color
+        // SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+        // SDL_Rect sidebar = {740, 85, 279, 678};
+        // SDL_RenderFillRect(renderer, &sidebar);
 
         // Map border - gold color
         SDL_SetRenderDrawColor(renderer, 200, 170, 50, 255);
-        SDL_Rect mapBorder = {0, 80, 740, 688};
+        SDL_Rect mapBorder = {5, 85, 730, 678};
         SDL_RenderDrawRect(renderer, &mapBorder);
 
         // Sidebar border - dark gray
-        SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
-        SDL_Rect sidebarBorder = {740, 80, 284, 688};
-        SDL_RenderDrawRect(renderer, &sidebarBorder);
+        // SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
+        // SDL_Rect sidebarBorder = {740, 80, 284, 688};
+        // SDL_RenderDrawRect(renderer, &sidebarBorder);
 
         // Tab bar background - dark brown
         SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
@@ -80,22 +80,22 @@ int main() {
         // add rectangles for task labels
         // STOCK - green
         SDL_SetRenderDrawColor(renderer, 0, activeTab == 0 ? 200 : 120, 0, 255);
-        SDL_Rect stockTab = {740, 80, 71, 40};
+        SDL_Rect stockTab = {740, 424, 71, 40};
         SDL_RenderFillRect(renderer, &stockTab);
 
         // ARMY - red
         SDL_SetRenderDrawColor(renderer, activeTab == 1 ? 220 : 150, 0, 0, 255);
-        SDL_Rect armyTab = {811, 80, 71, 40};
+        SDL_Rect armyTab =  {811, 424, 71, 40};
         SDL_RenderFillRect(renderer, &armyTab);
 
         // RELAT - blue
         SDL_SetRenderDrawColor(renderer, 0, 0, activeTab == 2 ? 220 : 150, 255);
-        SDL_Rect relatTab = {882, 80, 71, 40};
+        SDL_Rect relatTab = {882, 424, 71, 40};
         SDL_RenderFillRect(renderer, &relatTab);
 
         // OPTS - brown
         SDL_SetRenderDrawColor(renderer, activeTab == 3 ? 160 : 101, activeTab == 3 ? 100 : 67, activeTab == 3 ? 50 : 33, 255);
-        SDL_Rect optsTab = {953, 80, 71, 40};
+        SDL_Rect optsTab =  {953, 424, 71, 40};
         SDL_RenderFillRect(renderer, &optsTab);
 
         // Add labels for tasks
@@ -103,7 +103,7 @@ int main() {
         SDL_Color white = {255, 255, 255, 255};
         SDL_Surface* surface = TTF_RenderText_Solid(font, "STOCK", white);
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-        SDL_Rect textRect = {750, 88, surface->w, surface->h};
+        SDL_Rect textRect =  {750, 430, surface->w,  surface->h};
         SDL_RenderCopy(renderer, texture, NULL, &textRect);
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
@@ -111,7 +111,7 @@ int main() {
         // army task
         SDL_Surface* surface2 = TTF_RenderText_Solid(font, "ARMY", white);
         SDL_Texture* texture2 = SDL_CreateTextureFromSurface(renderer, surface2);
-        SDL_Rect textRect2 = {820, 88, surface2->w, surface2->h};
+        SDL_Rect textRect2 = {820, 430, surface2->w, surface2->h};
         SDL_RenderCopy(renderer, texture2, NULL, &textRect2);
         SDL_FreeSurface(surface2);
         SDL_DestroyTexture(texture2);
@@ -119,7 +119,7 @@ int main() {
         //relations task
         SDL_Surface* surface3 = TTF_RenderText_Solid(font, "RELAT", white);
         SDL_Texture* texture3 = SDL_CreateTextureFromSurface(renderer, surface3);
-        SDL_Rect textRect3 = {890, 88, surface3->w, surface3->h};
+        SDL_Rect textRect3 = {890, 430, surface3->w, surface3->h};
         SDL_RenderCopy(renderer, texture3, NULL, &textRect3);
         SDL_FreeSurface(surface3);
         SDL_DestroyTexture(texture3);
@@ -127,14 +127,19 @@ int main() {
         // game options
         SDL_Surface* surface4 = TTF_RenderText_Solid(font, "OPTS", white);
         SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer, surface4);
-        SDL_Rect textRect4 = {960, 88, surface4->w, surface4->h};
+        SDL_Rect textRect4 = {960, 430, surface4->w, surface4->h};
         SDL_RenderCopy(renderer, texture4, NULL, &textRect4);
         SDL_FreeSurface(surface4);
         SDL_DestroyTexture(texture4);
 
+        // First task bar - dark wood background
+        SDL_SetRenderDrawColor(renderer, 80, 45, 10, 255);
+        SDL_Rect taskBar1 = {745, 90, 274, 35};
+        SDL_RenderFillRect(renderer, &taskBar1);
+
         // Game info panel - dark brown
         SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
-        SDL_Rect infoPanel = {740, 120, 284, 648};
+        SDL_Rect infoPanel = {745, 464, 274, 299};
         SDL_RenderFillRect(renderer, &infoPanel);
 
         // statistics pannel
