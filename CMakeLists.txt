@@ -8,7 +8,7 @@ find_package(SDL2_ttf REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
-add_executable(castles3 src/main.cpp src/ui.cpp src/map.cpp src/game.cpp)
+add_executable(castles3 src/main.cpp src/ui.cpp src/map.cpp src/game.cpp src/collection.cpp)
 
 file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR}) # add data folder to build directory
 file(COPY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR}) # add fonts to build directory

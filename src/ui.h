@@ -15,7 +15,7 @@ extern SDL_Color yellow;
 extern SDL_Color white;
 
 enum IconType  { TASK, UNIT, RESOURCE };
-enum IconShape { CASTLE, SWORD, SHIELD, HELMET, SCROLL, ARROW, CIRCLE, TRIANGLE, SQUARE, DIAMOND };
+enum IconShape { CASTLE, SWORD, SHIELD, HELMET, SCROLL, ARROW, CIRCLE, TRIANGLE, SQUARE, DIAMOND, FOOD, TIMBER, IRON, GOLD };
 
 struct TopBarIcon {
     SDL_Color bgColor;
