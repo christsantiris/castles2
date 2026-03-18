@@ -56,7 +56,7 @@ void Game::render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
     } else if (screen == DYNASTY_SELECT) {
         renderDynastySelect(renderer, font);
     } else if (screen == PLAYING) {
-        renderUI(renderer, font, activeTab);
+        renderUI(renderer, font, activeTab, date.toString().c_str());
         map.render(renderer, font);
 
         if (activeTab == 3) {
@@ -69,5 +69,15 @@ void Game::render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
                 break;
             }
         }
+    }
+}
+
+void Game::update() {
+    if (screen != PLAYING) return;
+
+    Uint32 now = SDL_GetTicks();
+    if (now - lastTickTime >= tickIntervalMs) {
+        lastTickTime = now;
+        date.advance();
     }
 }

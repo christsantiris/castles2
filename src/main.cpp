@@ -53,6 +53,7 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
         SDL_RenderClear(renderer);
 
+        game.update(); // increment date
         game.render(renderer, font, musicOn);
 
         SDL_RenderPresent(renderer);

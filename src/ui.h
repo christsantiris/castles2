@@ -34,7 +34,7 @@ extern TopBarIcon topBarIcons[];
 extern TaskSlot taskSlots[];
 
 void drawShape(SDL_Renderer* renderer, IconShape shape, int x, int y); // Used for creating polygons
-void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab); // Render main game. 
+void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char* dateStr); // Render main game. 
 void renderLanding(SDL_Renderer* renderer, TTF_Font* font); // Render landing page. 
 void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font); // Render Character select page.
 void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province& province, const std::string& playerDynasty); // Render province info.
