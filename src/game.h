@@ -4,6 +4,7 @@
 #include "ui.h"
 #include "map.h"
 #include "collection.h"
+#include "combat.h"
 
 enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING };
 enum GameAction { NONE, QUIT, TOGGLE_MUSIC };
@@ -52,6 +53,10 @@ public:
     int availableWorkers = 4;
     int pendingWorkers[4] = {1, 1, 1, 1}; // workers selected per resource before starting
 
+    // combat related vars
+    CombatTask combat;
+    int playerStrength = 10;
+
     GameDate date = {2, 5, 1312};
 
     Uint32 lastTickTime = 0;
@@ -68,6 +73,11 @@ public:
 
     void update();
     void render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn);
+    // admin tasks
     void startTask(ResourceType res, int workers);
     void cancelTask();
+    // combat
+    void startCombat(int provinceId);
+    void resolveCombat();
+    void cancelCombat();
 };

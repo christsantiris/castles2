@@ -26,7 +26,7 @@ void Game::render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
 
         for (auto& p : map.provinces) {
             if (p.isSelected) {
-                renderProvinceInfo(renderer, font, p, playerDynasty);
+                renderProvinceInfo(renderer, font, p, playerDynasty, combat);
                 break;
             }
         }
@@ -48,6 +48,11 @@ void Game::update() {
                 availableWorkers += task.workersAssigned;
                 task = CollectionTask{};
             }
+        }
+        if (combat.active) {
+            combat.daysAccumulated++;
+            if (combat.daysAccumulated >= combat.daysRequired)
+                resolveCombat();
         }
     }
 }

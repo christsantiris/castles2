@@ -30,10 +30,18 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                 else if (x >= 811 && x < 882)  game.activeTab = game.activeTab == 1 ? -1 : 1;
                 else if (x >= 882 && x < 953)  game.activeTab = game.activeTab == 2 ? -1 : 2;
                 else if (x >= 953 && x < 1024) game.activeTab = game.activeTab == 3 ? -1 : 3;
+
+                // Deselect all provinces when switching tabs
+                for (auto& p : game.map.provinces)
+                    p.isSelected = false;
             }
 
             if (x >= 6 && x <= 728 && y >= 86 && y <= 761)
                 game.map.handleClick(x, y);
+
+            // Cancel combat button
+            if (x >= 745 && x <= 805 && y >= 155 && y <= 177)
+                game.cancelCombat();
 
             if (game.activeTab == 0) {
                 for (int i = 0; i < 4; i++) {
@@ -63,6 +71,16 @@ GameAction handleInput(SDL_Event& event, Game& game) {
             if (game.activeTab == 3) {
                 if (x >= 750 && x <= 1010 && y >= 605 && y <= 655) return TOGGLE_MUSIC;
                 if (x >= 750 && x <= 1010 && y >= 670 && y <= 720) return QUIT;
+            }
+
+            // Attack button in province info panel
+            if (x >= 750 && x <= 1000 && y >= 600 && y <= 645) {
+                for (auto& p : game.map.provinces) {
+                    if (p.isSelected && p.owner != playerDynasty && p.name != "Constantinople") {
+                        game.startCombat(p.id);
+                        break;
+                    }
+                }
             }
         }
     }

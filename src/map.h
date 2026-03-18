@@ -13,6 +13,7 @@ struct Province {
     bool isSelected = false;
 
     bool containsPoint(int x, int y) const;
+    std::vector<int> neighbors; // calculate if province is adjacent
 };
 
 class Map {

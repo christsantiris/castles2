@@ -8,16 +8,13 @@ SDL_Color yellow = {255, 215, 0, 255};
 SDL_Color white  = {255, 255, 255, 255};
 
 TopBarIcon topBarIcons[] = {
-    {{0, 120, 0, 255},   4,  4, TASK,     CASTLE},   // stock 1
-    {{0, 120, 0, 255},   4,  4, TASK,     CASTLE},   // stock 2
-    {{150, 0, 0, 255},   4,  4, TASK,     SWORD},    // army 1
-    {{150, 0, 0, 255},   4,  4, TASK,     SWORD},    // army 2
-    {{0, 0, 150, 255},   4,  4, TASK,     SCROLL},   // relations 1
-    {{0, 0, 150, 255},   4,  4, TASK,     SCROLL},   // relations 2
+    {{0, 120, 0, 255},   4,  4, TASK,     CASTLE},   // stock
+    {{150, 0, 0, 255},   4,  4, TASK,     SWORD},    // army
+    {{0, 0, 150, 255},   4,  4, TASK,     SCROLL},   // relations
     {{150, 0, 0, 255},   0,  4, UNIT,     SWORD},    // infantry
     {{150, 0, 0, 255},   0,  4, UNIT,     ARROW},    // archers
     {{150, 0, 0, 255},   0,  4, UNIT,     SHIELD},   // knights
-    {{0, 120, 0, 255},   0,  0, RESOURCE, FOOD}, 
+    {{0, 120, 0, 255},   0,  0, RESOURCE, FOOD},
     {{0, 120, 0, 255},   0,  0, RESOURCE, TIMBER},
     {{0, 120, 0, 255},   0,  0, RESOURCE, IRON},
     {{0, 120, 0, 255},   0,  0, RESOURCE, GOLD},
@@ -155,10 +152,15 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char*
         SDL_DestroyTexture(t);
     }
 
-    // Task slot row
-    SDL_SetRenderDrawColor(renderer, game.task.active ? 80 : 180, game.task.active ? 45 : 180, game.task.active ? 10 : 180, 255);
+    // Task slot row - collection
+    SDL_SetRenderDrawColor(renderer, game.task.active ? 80 : 80, game.task.active ? 45 : 45, game.task.active ? 10 : 10, 255);
     SDL_Rect taskRow = {745, 90, 274, 45};
     SDL_RenderFillRect(renderer, &taskRow);
+
+    // Progress background - always visible
+    SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+    SDL_Rect progressBg = {745, 118, 274, 8};
+    SDL_RenderFillRect(renderer, &progressBg);
 
     if (game.task.active) {
         const char* resNames[] = {"Food", "Timber", "Iron", "Gold"};
@@ -170,21 +172,57 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char*
         SDL_FreeSurface(ls);
         SDL_DestroyTexture(lt);
 
-        SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
-        SDL_Rect progressBg = {745, 118, 274, 8};
-        SDL_RenderFillRect(renderer, &progressBg);
-
         SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
         SDL_Rect progressFill = {745, 118, (int)(274 * game.task.progress()), 8};
         SDL_RenderFillRect(renderer, &progressFill);
     }
 
+    // Combat row background
+    SDL_SetRenderDrawColor(renderer, game.combat.active ? 120 : 80, game.combat.active ? 0 : 45, 10, 255);
+    SDL_Rect combatRow = {745, 145, 274, 45};
+    SDL_RenderFillRect(renderer, &combatRow);
+
+    // Progress background - always visible
+    SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+    SDL_Rect combatProgressBg = {745, 173, 274, 8};
+    SDL_RenderFillRect(renderer, &combatProgressBg);
+
+    if (game.combat.active) {
+        std::string label = "Attack: " + game.map.provinces[game.combat.targetProvince].name;
+        SDL_Surface* ls = TTF_RenderText_Solid(font, label.c_str(), yellow);
+        SDL_Texture* lt = SDL_CreateTextureFromSurface(renderer, ls);
+        SDL_Rect lr = {750, 152, ls->w, ls->h};
+        SDL_RenderCopy(renderer, lt, NULL, &lr);
+        SDL_FreeSurface(ls);
+        SDL_DestroyTexture(lt);
+
+        SDL_SetRenderDrawColor(renderer, 220, 0, 0, 255);
+        SDL_Rect progressFill = {745, 173, (int)(274 * game.combat.progress()), 8};
+        SDL_RenderFillRect(renderer, &progressFill);
+
+        // Cancel button
+        SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
+        SDL_Rect cancelBtn = {745, 155, 60, 22};
+        SDL_RenderFillRect(renderer, &cancelBtn);
+        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+        SDL_RenderDrawRect(renderer, &cancelBtn);
+        SDL_Surface* cs = TTF_RenderText_Solid(font, "Cancel", yellow);
+        SDL_Texture* ct = SDL_CreateTextureFromSurface(renderer, cs);
+        SDL_Rect cr = {748, 157, cs->w, cs->h};
+        SDL_RenderCopy(renderer, ct, NULL, &cr);
+        SDL_FreeSurface(cs);
+        SDL_DestroyTexture(ct);
+    }
     // Top bar icons
     int iconX[] = {5, 65, 135, 195, 265, 325, 395, 455, 515, 585, 645, 705, 765};
 
-    for (int i = 0; i < 13; i++) {
-        if (i >= 9 && i <= 12) {
-            topBarIcons[i].total = game.resources[i - 9];
+    for (int i = 0; i < 10; i++) {
+        if (i == 0) {
+            topBarIcons[i].used  = game.totalWorkers - game.availableWorkers;
+            topBarIcons[i].total = game.totalWorkers;
+        }
+        if (i >= 6 && i <= 9) {
+            topBarIcons[i].total = game.resources[i - 6];
         }
         if (topBarIcons[i].type == TASK) {
             SDL_SetRenderDrawColor(renderer, topBarIcons[i].bgColor.r, topBarIcons[i].bgColor.g, topBarIcons[i].bgColor.b, 255);
@@ -312,7 +350,8 @@ void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font) {
     }
 }
 
-void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &province, const std::string& playerDynasty) {
+void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &province, const std::string& playerDynasty, const CombatTask& combat) {
+    bool isCombatTarget = combat.active && combat.targetProvince == province.id;
     // Clear info panel area
     SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
     SDL_Rect clearRect = {745, 464, 274, 299};
@@ -372,6 +411,14 @@ void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &
     SDL_RenderCopy(renderer, actionTex, NULL, &actionTextRect);
     SDL_FreeSurface(action);
     SDL_DestroyTexture(actionTex);
+    if (isCombatTarget) {
+        SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+        SDL_Rect pbg = {750, 650, 250, 10};
+        SDL_RenderFillRect(renderer, &pbg);
+        SDL_SetRenderDrawColor(renderer, 220, 0, 0, 255);
+        SDL_Rect pfill = {750, 650, (int)(250 * combat.progress()), 10};
+        SDL_RenderFillRect(renderer, &pfill);
+    }
 }
 
 void renderOptsPanel(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {

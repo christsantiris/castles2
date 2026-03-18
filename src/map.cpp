@@ -23,9 +23,9 @@ void Map::load(const std::string& path) {
 
     for (auto& p : data["provinces"]) {
         Province province;
-        province.id    = p["id"];
-        province.name  = p["name"];
-        province.owner = p["owner"];
+        province.id       = p["id"];
+        province.name     = p["name"];
+        province.owner    = p["owner"];
         province.resource = p["resource"];
 
         for (auto& point : p["polygon"]) {
@@ -34,6 +34,10 @@ void Map::load(const std::string& path) {
             pt.y = point["y"];
             province.polygon.push_back(pt);
         }
+
+        for (auto& neighbor : p["neighbors"])
+            province.neighbors.push_back(neighbor);
+
         provinces.push_back(province);
     }
 }
