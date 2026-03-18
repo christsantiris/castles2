@@ -5,6 +5,7 @@
 #include "map.h"
 
 enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING };
+enum GameAction { NONE, QUIT, TOGGLE_MUSIC };
 
 class Game {
 public:
@@ -15,7 +16,7 @@ public:
     Map map;
 
     void init();
-    void handleEvent(SDL_Event& event);
+    GameAction handleEvent(SDL_Event& event);
     void update();
-    void render(SDL_Renderer* renderer, TTF_Font* font);
+    void render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn);
 };

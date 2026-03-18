@@ -379,3 +379,34 @@ void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &
     SDL_FreeSurface(action);
     SDL_DestroyTexture(actionTex);
 }
+
+void renderOptsPanel(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
+    SDL_Color gold = {255, 215, 0, 255};
+
+    // Clear info panel
+    SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
+    SDL_Rect clearRect = {745, 464, 274, 299};
+    SDL_RenderFillRect(renderer, &clearRect);
+
+    const char* labels[] = {
+        "Save Game",
+        "Load Game",
+        musicOn ? "Music: ON" : "Music: OFF",
+        "Quit"
+    };
+
+    for (int i = 0; i < 4; i++) {
+        SDL_Rect btn = {750, 475 + (i * 65), 260, 50};
+        SDL_SetRenderDrawColor(renderer, 80, 40, 10, 255);
+        SDL_RenderFillRect(renderer, &btn);
+        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+        SDL_RenderDrawRect(renderer, &btn);
+
+        SDL_Surface* s = TTF_RenderText_Solid(font, labels[i], gold);
+        SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+        SDL_Rect r = {880 - s->w / 2, 492 + (i * 65), s->w, s->h};
+        SDL_RenderCopy(renderer, t, NULL, &r);
+        SDL_FreeSurface(s);
+        SDL_DestroyTexture(t);
+    }
+}

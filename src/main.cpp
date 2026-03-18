@@ -14,6 +14,8 @@ int main() {
         Mix_PlayMusic(music, -1); // -1 means loop forever
     }
 
+    bool musicOn = true;
+
     TTF_Font* font = TTF_OpenFont("fonts/MedievalSharp-Regular.ttf", 18);
     if (!font) {
         SDL_Log("Failed to load font: %s", TTF_GetError());
@@ -39,13 +41,19 @@ int main() {
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
-            game.handleEvent(event);
+            GameAction action = game.handleEvent(event);
+            if (action == QUIT) running = false;
+            if (action == TOGGLE_MUSIC) {
+                musicOn = !musicOn;
+                if (musicOn) Mix_ResumeMusic();
+                else Mix_PauseMusic();
+            }
         }
 
         SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
         SDL_RenderClear(renderer);
 
-        game.render(renderer, font);
+        game.render(renderer, font, musicOn);
 
         SDL_RenderPresent(renderer);
     }

@@ -38,3 +38,4 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab); // Render 
 void renderLanding(SDL_Renderer* renderer, TTF_Font* font); // Render landing page. 
 void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font); // Render Character select page.
 void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province& province, const std::string& playerDynasty); // Render province info.
+void renderOptsPanel(SDL_Renderer* renderer, TTF_Font* font, bool musicOn); // Render options pannel
