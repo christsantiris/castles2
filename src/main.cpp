@@ -2,6 +2,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #include "game.h"
+#include "input.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -41,7 +42,7 @@ int main() {
     while (running) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
-            GameAction action = game.handleEvent(event);
+            GameAction action = handleInput(event, game);
             if (action == QUIT) running = false;
             if (action == TOGGLE_MUSIC) {
                 musicOn = !musicOn;
