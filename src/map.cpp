@@ -26,6 +26,7 @@ void Map::load(const std::string& path) {
         province.id    = p["id"];
         province.name  = p["name"];
         province.owner = p["owner"];
+        province.resource = p["resource"];
 
         for (auto& point : p["polygon"]) {
             SDL_Point pt;
