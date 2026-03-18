@@ -81,7 +81,7 @@ void drawShape(SDL_Renderer* renderer, IconShape shape, int x, int y) {
     }
 }
 
-void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab) {
+void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char* dateStr) {
     // Top bar
     SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
     SDL_Rect topBar = {5, 5, 1014, 70};
@@ -132,7 +132,7 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab) {
     SDL_RenderFillRect(renderer, &infoPanel);
 
     // Title, date, score
-    const char* infoLabels[] = {"Castles III", "May 2, 1204", "Score: 0"};
+    const char* infoLabels[] = {"Castles III", dateStr, "Score: 0"};
     int infoY[] = {500, 600, 640};
     for (int i = 0; i < 3; i++) {
         SDL_Surface* s = TTF_RenderText_Solid(font, infoLabels[i], yellow);
