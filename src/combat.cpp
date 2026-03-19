@@ -33,8 +33,8 @@ void Game::startCombat(int provinceId, int units) {
     combat.active          = true;
     combat.targetProvince  = provinceId;
     combat.unitsAssigned   = units;
-    combat.daysAccumulated = 0;
-    combat.daysRequired    = daysToCollect[w][provinceCount];
+    int daysPerUnit[] = {40, 20, 13, 10, 8, 7, 6, 5};
+    combat.daysRequired = daysPerUnit[w] * (p.owner == "neutral" ? 1 : 2);
     availableMilitary     -= units;
 }
 
