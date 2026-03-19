@@ -12,6 +12,8 @@ GameAction handleInput(SDL_Event& event, Game& game) {
         if (screen == LANDING) {
             if (x >= 412 && x <= 612 && y >= 350 && y <= 400)
                 screen = DYNASTY_SELECT;
+            if (x >= 412 && x <= 612 && y >= 510 && y <= 560)
+                return QUIT;
 
         } else if (screen == DYNASTY_SELECT) {
             for (int i = 0; i < 5; i++) {

@@ -311,6 +311,19 @@ void renderLanding(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_RenderCopy(renderer, loadGameTex, NULL, &loadGameTextRect);
     SDL_FreeSurface(loadGame);
     SDL_DestroyTexture(loadGameTex);
+
+    // Quit button
+    SDL_SetRenderDrawColor(renderer, 80, 20, 20, 255);
+    SDL_Rect quitBtn = {412, 510, 200, 50};
+    SDL_RenderFillRect(renderer, &quitBtn);
+    SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+    SDL_RenderDrawRect(renderer, &quitBtn);
+    SDL_Surface* quit = TTF_RenderText_Solid(font, "Quit", gold);
+    SDL_Texture* quitTex = SDL_CreateTextureFromSurface(renderer, quit);
+    SDL_Rect quitTextRect = {512 - quit->w / 2, 525, quit->w, quit->h};
+    SDL_RenderCopy(renderer, quitTex, NULL, &quitTextRect);
+    SDL_FreeSurface(quit);
+    SDL_DestroyTexture(quitTex);
 }
 
 void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font) {

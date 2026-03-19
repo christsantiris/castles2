@@ -62,6 +62,13 @@ public:
     int availableMilitary = 4;
     int pendingMilitary[2] = {1, 1};
 
+    // helper funcs for unlocking new features
+    bool hasSecondStockSlot()     const { return score >= 200; }
+    bool hasSecondMilitarySlot()  const { return score >= 400; }
+    bool hasSecondRelationsSlot() const { return score >= 600; }
+    bool hasKnights()             const { return score >= 800; }
+    bool canAttackConstantinople() const { return score >= 1000; }
+
     GameDate date = {2, 5, 1312};
 
     Uint32 lastTickTime = 0;
