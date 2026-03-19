@@ -76,7 +76,7 @@ void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &
         : SDL_Color{220, 0, 0, 255};
         SDL_Surface* ms = TTF_RenderText_Solid(font, game.battleMessage.c_str(), msgColor);
         SDL_Texture* mt = SDL_CreateTextureFromSurface(renderer, ms);
-        SDL_Rect mr = {750, 655, ms->w, ms->h};
+        SDL_Rect mr = {750, 680, ms->w, ms->h};
         SDL_RenderCopy(renderer, mt, NULL, &mr);
         SDL_FreeSurface(ms);
         SDL_DestroyTexture(mt);
