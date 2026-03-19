@@ -161,7 +161,7 @@
             "name": "Syria",
             "owner": "neutral",
             "resource": "Gold",
-            "neighbors": [8, 11, 15],
+            "neighbors": [8, 11, 20],
             "polygon": [
                 {"x": 532, "y": 358},
                 {"x": 728, "y": 358},
@@ -200,11 +200,11 @@
             "name": "Judaea",
             "owner": "neutral",
             "resource": "Food",
-            "neighbors": [11, 12, 14, 18],
+            "neighbors": [11, 14, 18, 20],
             "polygon": [
                 {"x": 382, "y": 493},
-                {"x": 728, "y": 493},
-                {"x": 728, "y": 626},
+                {"x": 555, "y": 493},
+                {"x": 555, "y": 626},
                 {"x": 382, "y": 626}
             ]
         },
@@ -239,11 +239,11 @@
             "name": "Egypt",
             "owner": "neutral",
             "resource": "Gold",
-            "neighbors": [15, 17],
+            "neighbors": [15, 17, 21],
             "polygon": [
                 {"x": 382, "y": 628},
-                {"x": 728, "y": 628},
-                {"x": 728, "y": 761},
+                {"x": 555, "y": 628},
+                {"x": 555, "y": 761},
                 {"x": 382, "y": 761}
             ]
         },
@@ -258,6 +258,32 @@
                 {"x": 380, "y": 223},
                 {"x": 380, "y": 626},
                 {"x": 260, "y": 626}
+            ]
+        },
+        {
+            "id": 20,
+            "name": "Arabia",
+            "owner": "neutral",
+            "resource": "Iron",
+            "neighbors": [12, 15, 21],
+            "polygon": [
+                {"x": 557, "y": 493},
+                {"x": 728, "y": 493},
+                {"x": 728, "y": 626},
+                {"x": 557, "y": 626}
+            ]
+        },
+        {
+            "id": 21,
+            "name": "Africa",
+            "owner": "neutral",
+            "resource": "Food",
+            "neighbors": [18, 20],
+            "polygon": [
+                {"x": 557, "y": 628},
+                {"x": 728, "y": 628},
+                {"x": 728, "y": 761},
+                {"x": 557, "y": 761}
             ]
         }
     ]
