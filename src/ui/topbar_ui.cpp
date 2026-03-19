@@ -5,7 +5,7 @@ void renderTopBar(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
     SDL_Rect topBar = {5, 5, 1014, 70};
     SDL_RenderFillRect(renderer, &topBar);
 
-    int iconX[] = {5, 65, 135, 195, 265, 325, 395, 455, 515, 585, 645, 705, 765};
+    int iconX[] = {5, 70, 135, 245, 305, 365, 480, 540, 600, 660};
 
     for (int i = 0; i < 10; i++) {
         if (i == 0) {
@@ -56,5 +56,15 @@ void renderTopBar(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
             SDL_FreeSurface(ts);
             SDL_DestroyTexture(tt);
         }
+    }
+    extern std::string playerDynasty;
+    if (!playerDynasty.empty()) {
+        std::string dynastyLabel = "House of " + playerDynasty;
+        SDL_Surface* ds = TTF_RenderText_Solid(font, dynastyLabel.c_str(), yellow);
+        SDL_Texture* dt = SDL_CreateTextureFromSurface(renderer, ds);
+        SDL_Rect dr = {740, 35 - ds->h / 2, ds->w, ds->h};
+        SDL_RenderCopy(renderer, dt, NULL, &dr);
+        SDL_FreeSurface(ds);
+        SDL_DestroyTexture(dt);
     }
 }
