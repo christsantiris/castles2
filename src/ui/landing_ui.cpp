@@ -88,3 +88,60 @@ void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font) {
         SDL_DestroyTexture(t);
     }
 }
+
+void renderVictory(SDL_Renderer* renderer, TTF_Font* font, const std::string& dynasty, int score, const std::string& date) {
+    SDL_Color gold = {255, 215, 0, 255};
+    SDL_Color white = {255, 255, 255, 255};
+
+    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+    SDL_Rect bg = {0, 0, 1024, 768};
+    SDL_RenderFillRect(renderer, &bg);
+
+    // Victory title
+    SDL_Surface* title = TTF_RenderText_Solid(font, "Victory!", gold);
+    SDL_Texture* titleTex = SDL_CreateTextureFromSurface(renderer, title);
+    SDL_Rect titleRect = {512 - title->w / 2, 150, title->w, title->h};
+    SDL_RenderCopy(renderer, titleTex, NULL, &titleRect);
+    SDL_FreeSurface(title);
+    SDL_DestroyTexture(titleTex);
+
+    // Dynasty name
+    std::string dynastyStr = "Hail " + dynasty + " you have conquered Constantinople and have been crowned Emperor of Rome!";
+    SDL_Surface* ds = TTF_RenderText_Solid(font, dynastyStr.c_str(), white);
+    SDL_Texture* dt = SDL_CreateTextureFromSurface(renderer, ds);
+    SDL_Rect dr = {512 - ds->w / 2, 250, ds->w, ds->h};
+    SDL_RenderCopy(renderer, dt, NULL, &dr);
+    SDL_FreeSurface(ds);
+    SDL_DestroyTexture(dt);
+
+    // Date
+    std::string dateStr = "Date of Conquest: " + date;
+    SDL_Surface* dts = TTF_RenderText_Solid(font, dateStr.c_str(), white);
+    SDL_Texture* dtt = SDL_CreateTextureFromSurface(renderer, dts);
+    SDL_Rect dtr = {512 - dts->w / 2, 300, dts->w, dts->h};
+    SDL_RenderCopy(renderer, dtt, NULL, &dtr);
+    SDL_FreeSurface(dts);
+    SDL_DestroyTexture(dtt);
+
+    // Score
+    std::string scoreStr = "Final Score: " + std::to_string(score);
+    SDL_Surface* ss = TTF_RenderText_Solid(font, scoreStr.c_str(), gold);
+    SDL_Texture* st = SDL_CreateTextureFromSurface(renderer, ss);
+    SDL_Rect sr = {512 - ss->w / 2, 350, ss->w, ss->h};
+    SDL_RenderCopy(renderer, st, NULL, &sr);
+    SDL_FreeSurface(ss);
+    SDL_DestroyTexture(st);
+
+    // Play Again button
+    SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
+    SDL_Rect btn = {412, 450, 200, 50};
+    SDL_RenderFillRect(renderer, &btn);
+    SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+    SDL_RenderDrawRect(renderer, &btn);
+    SDL_Surface* ps = TTF_RenderText_Solid(font, "Play Again", gold);
+    SDL_Texture* pt = SDL_CreateTextureFromSurface(renderer, ps);
+    SDL_Rect pr = {512 - ps->w / 2, 465, ps->w, ps->h};
+    SDL_RenderCopy(renderer, pt, NULL, &pr);
+    SDL_FreeSurface(ps);
+    SDL_DestroyTexture(pt);
+}

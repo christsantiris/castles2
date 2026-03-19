@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 extern std::string playerDynasty;
+extern GameScreen screen;
 
 int getDynastyStrength(const std::string& dynasty) {
     if (dynasty == "neutral")    return 5;
@@ -42,6 +43,7 @@ void Game::resolveCombat() {
     auto& p = map.provinces[combat.targetProvince];
     int attackRoll = rand() % playerStrength;
     int defendRoll = rand() % getDynastyStrength(p.owner);
+    // SDL_Log("attackRoll=%d defendRoll=%d owner=%s", attackRoll, defendRoll, p.owner.c_str());
 
     if (attackRoll >= defendRoll) {
         if (p.owner == "neutral")
@@ -49,6 +51,8 @@ void Game::resolveCombat() {
         else
             score += 150;
         p.owner = playerDynasty;
+        if (p.name == "Constantinople")
+            screen = VICTORY;
     }
 
     availableMilitary += combat.unitsAssigned;

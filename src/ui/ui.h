@@ -42,9 +42,10 @@ void renderLanding(SDL_Renderer* renderer, TTF_Font* font); // Render landing pa
 void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font); // Render Character select page.
 void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province& province, Game& game); //Render province info
 void renderOptsPanel(SDL_Renderer* renderer, TTF_Font* font, bool musicOn); // Render options pannel
-void renderStockTab(SDL_Renderer* renderer, TTF_Font* font, Game& game);
-void renderTopBar(SDL_Renderer* renderer, TTF_Font* font, Game& game);
-void renderTaskRows(SDL_Renderer* renderer, TTF_Font* font, Game& game);
-void renderTabBar(SDL_Renderer* renderer, TTF_Font* font, int activeTab);
+void renderStockTab(SDL_Renderer* renderer, TTF_Font* font, Game& game); // Render stock tab
+void renderTopBar(SDL_Renderer* renderer, TTF_Font* font, Game& game); // Render top icon
+void renderTaskRows(SDL_Renderer* renderer, TTF_Font* font, Game& game); // Render task progress
+void renderTabBar(SDL_Renderer* renderer, TTF_Font* font, int activeTab); // Render tab menu options
 void renderInfoPanel(SDL_Renderer* renderer, TTF_Font* font, const char* dateStr, Game& game);
-void renderCombatRow(SDL_Renderer* renderer, TTF_Font* font, Game& game);
+void renderCombatRow(SDL_Renderer* renderer, TTF_Font* font, Game& game); // Render combat progress
+void renderVictory(SDL_Renderer* renderer, TTF_Font* font, const std::string& dynasty, int score, const std::string& date); // Render victory screen

@@ -82,7 +82,7 @@ GameAction handleInput(SDL_Event& event, Game& game) {
             // Attack button in province info panel
             if (x >= 750 && x <= 1000 && y >= 600 && y <= 645) {
                 for (auto& p : game.map.provinces) {
-                    if (p.isSelected && p.owner != playerDynasty && p.name != "Constantinople") {
+                    if (p.isSelected && p.owner != playerDynasty && (p.name != "Constantinople" || game.canAttackConstantinople())) {
                         game.startCombat(p.id, game.pendingMilitary[0]);
                         break;
                     }
@@ -103,6 +103,9 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                     break;
                 }
             }
+        } else if (screen == VICTORY) {
+            if (x >= 412 && x <= 612 && y >= 450 && y <= 500)
+                screen = LANDING;
         }
     }
     return NONE;

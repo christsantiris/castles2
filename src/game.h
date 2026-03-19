@@ -6,7 +6,7 @@
 #include "collection.h"
 #include "combat.h"
 
-enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING };
+enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING, VICTORY };
 enum GameAction { NONE, QUIT, TOGGLE_MUSIC };
 
 struct GameDate {

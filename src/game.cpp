@@ -30,6 +30,8 @@ void Game::render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
                 break;
             }
         }
+    } else if (screen == VICTORY) {
+        renderVictory(renderer, font, playerDynasty, score, date.toString());
     }
 }
 
