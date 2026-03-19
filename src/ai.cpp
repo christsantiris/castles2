@@ -91,8 +91,10 @@ void Game::updateAI() {
         aiCombat.active         = true;
         aiCombat.targetProvince = targetId;
         aiCombat.daysAccumulated = 0;
+        int aiUnits = 2; // AI attacks with 2 units on easy mode
         int daysPerUnit[] = {40, 20, 13, 10, 8, 7, 6, 5};
-        aiCombat.daysRequired = daysPerUnit[0] * (target.owner == "neutral" ? 1 : 2);
+        aiCombat.daysRequired = daysPerUnit[aiUnits - 1] * (target.owner == "neutral" ? 1 : 2);
+        aiCombat.unitsAssigned = aiUnits;
         aiCombats[dynasty] = aiCombat;
     }
 }

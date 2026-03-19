@@ -69,7 +69,7 @@ void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font) {
         "Kantakouzenos - Starts in Bulgaria",
         "Doukas        - Starts in Morea",
         "Palaiologos   - Starts in Achaia",
-        "Phokas        - Starts in Cappadocia",
+        "Phokas        - Starts in Egypt",
         "Komnenos      - Starts in Pontus"
     };
 

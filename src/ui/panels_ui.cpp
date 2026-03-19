@@ -82,7 +82,7 @@ void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &
         SDL_DestroyTexture(mt);
     }
 
-    if (!isOwned && !isCombatTarget) {
+    if (!isOwned && !isCombatTarget && game.availableMilitary > 0) {
         SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
         SDL_Rect minBtn = {750, 652, 22, 22};
         SDL_RenderFillRect(renderer, &minBtn);

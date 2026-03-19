@@ -55,7 +55,7 @@
         {
             "id": 4,
             "name": "Pontus",
-            "owner": "Komnenos",
+            "owner": "neutral",
             "resource": "Iron",
             "neighbors": [3, 8],
             "polygon": [
@@ -107,7 +107,7 @@
         {
             "id": 8,
             "name": "Cappadocia",
-            "owner": "Phokas",
+            "owner": "neutral",
             "resource": "Iron",
             "neighbors": [4, 7, 12],
             "polygon": [
@@ -120,7 +120,7 @@
         {
             "id": 9,
             "name": "Thessaly",
-            "owner": "neutral",
+             "owner": "Palaiologos",
             "resource": "Food",
             "neighbors": [5, 10, 13],
             "polygon": [
@@ -133,7 +133,7 @@
         {
             "id": 10,
             "name": "Achaia",
-            "owner": "Palaiologos",
+            "owner": "neutral",
             "resource": "Timber",
             "neighbors": [6, 9, 14],
             "polygon": [
@@ -146,7 +146,7 @@
         {
             "id": 11,
             "name": "Cilicia",
-            "owner": "neutral",
+            "owner": "Komnenos",
             "resource": "Iron",
             "neighbors": [7, 12, 15],
             "polygon": [
@@ -211,7 +211,7 @@
         {
             "id": 16,
             "name": "Morea",
-            "owner": "Doukas",
+            "owner": "neutral",
             "resource": "Food",
             "neighbors": [13, 17],
             "polygon": [
@@ -224,7 +224,7 @@
         {
             "id": 17,
             "name": "Crete",
-            "owner": "neutral",
+            "owner": "Doukas",
             "resource": "Food",
             "neighbors": [14, 16, 22],
             "polygon": [
@@ -237,7 +237,7 @@
         {
             "id": 18,
             "name": "Egypt",
-            "owner": "neutral",
+            "owner": "Phokas",
             "resource": "Gold",
             "neighbors": [15, 21, 22],
             "polygon": [
