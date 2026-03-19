@@ -4,6 +4,12 @@
 #include "game.h"
 #include "input.h"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include "game.h"
+#include "input.h"
+
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -12,7 +18,7 @@ int main() {
     if (!music) {
         SDL_Log("Failed to load music: %s", Mix_GetError());
     } else {
-        Mix_PlayMusic(music, -1); // -1 means loop forever
+        Mix_PlayMusic(music, -1);
     }
 
     bool musicOn = true;
@@ -51,13 +57,14 @@ int main() {
             }
         }
 
+        game.update();
+
         SDL_SetRenderDrawColor(renderer, 180, 180, 180, 255);
         SDL_RenderClear(renderer);
-
-        game.update(); // increment date
         game.render(renderer, font, musicOn);
-
         SDL_RenderPresent(renderer);
+
+        SDL_Delay(16);
     }
 
     SDL_DestroyRenderer(renderer);

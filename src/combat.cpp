@@ -53,10 +53,14 @@ void Game::resolveCombat() {
             score += 50;
         else
             score += 150;
+        battleMessage = "Victory! " + p.name + " conquered";
         p.owner = playerDynasty;
         if (p.name == "Constantinople")
             screen = VICTORY;
+    } else {
+        battleMessage = "Defeated! " + p.name + " held";
     }
+    battleMessageTimer = 5;
 
     availableMilitary += combat.unitsAssigned;
     combat = CombatTask{};

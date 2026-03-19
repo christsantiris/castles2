@@ -54,6 +54,7 @@ void Game::update() {
                 task = CollectionTask{};
             }
         }
+
         if (task2.active) {
             task2.daysAccumulated++;
             if (task2.daysAccumulated >= task2.daysRequired) {
@@ -63,10 +64,17 @@ void Game::update() {
                 task2 = CollectionTask{};
             }
         }
+
         if (combat.active) {
             combat.daysAccumulated++;
             if (combat.daysAccumulated >= combat.daysRequired)
                 resolveCombat();
+        }
+
+        if (battleMessageTimer > 0) {
+            battleMessageTimer--;
+            if (battleMessageTimer == 0)
+                battleMessage = "";
         }
     }
 }

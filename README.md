@@ -16,9 +16,7 @@ make run
 
 ## Roadmap
 - [ ] Updates to rectangular province UI (difficult)
-- [ ] Capture Constantinople for win condition
 - [ ] Advanced combat system
-- [ ] Unit types 
 - [ ] Unlock Knights
 - [ ] Add diplomacy (bribe province, relationships to prevent attack on owned provinces)
 - [ ] Save/Load

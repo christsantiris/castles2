@@ -101,4 +101,7 @@ public:
     void resolveCombat();
     void cancelCombat();
     void initArmies();
+
+    std::string battleMessage = "";
+    int battleMessageTimer = 0;
 };

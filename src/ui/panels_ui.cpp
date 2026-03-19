@@ -70,6 +70,18 @@ void renderProvinceInfo(SDL_Renderer* renderer, TTF_Font* font, const Province &
         SDL_RenderFillRect(renderer, &pfill);
     }
 
+    if (!game.battleMessage.empty()) {
+        SDL_Color msgColor = (game.battleMessage.find("Victory") != std::string::npos) 
+        ? SDL_Color{0, 200, 0, 255} 
+        : SDL_Color{220, 0, 0, 255};
+        SDL_Surface* ms = TTF_RenderText_Solid(font, game.battleMessage.c_str(), msgColor);
+        SDL_Texture* mt = SDL_CreateTextureFromSurface(renderer, ms);
+        SDL_Rect mr = {750, 680, ms->w, ms->h};
+        SDL_RenderCopy(renderer, mt, NULL, &mr);
+        SDL_FreeSurface(ms);
+        SDL_DestroyTexture(mt);
+    }
+
     if (!isOwned && !isCombatTarget) {
         SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
         SDL_Rect minBtn = {750, 652, 22, 22};
