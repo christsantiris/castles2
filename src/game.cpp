@@ -40,11 +40,13 @@ void Game::update() {
     if (now - lastTickTime >= tickIntervalMs) {
         lastTickTime = now;
         date.advance();
+        score++;
 
         if (task.active) {
             task.daysAccumulated++;
             if (task.daysAccumulated >= task.daysRequired) {
                 resources[task.res]++;
+                score += 10;
                 availableWorkers += task.workersAssigned;
                 task = CollectionTask{};
             }

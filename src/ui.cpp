@@ -141,7 +141,8 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char*
     SDL_RenderFillRect(renderer, &infoPanel);
 
     // Title, date, score
-    const char* infoLabels[] = {"Castles III", dateStr, "Score: 0"};
+    std::string scoreStr = "Score: " + std::to_string(game.score);
+    const char* infoLabels[] = {"Castles III", dateStr, scoreStr.c_str()};
     int infoY[] = {500, 600, 640};
     for (int i = 0; i < 3; i++) {
         SDL_Surface* s = TTF_RenderText_Solid(font, infoLabels[i], yellow);

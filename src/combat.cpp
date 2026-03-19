@@ -43,8 +43,13 @@ void Game::resolveCombat() {
     int attackRoll = rand() % playerStrength;
     int defendRoll = rand() % getDynastyStrength(p.owner);
 
-    if (attackRoll >= defendRoll)
+    if (attackRoll >= defendRoll) {
+        if (p.owner == "neutral")
+            score += 50;
+        else
+            score += 150;
         p.owner = playerDynasty;
+    }
 
     availableMilitary += combat.unitsAssigned;
     combat = CombatTask{};
