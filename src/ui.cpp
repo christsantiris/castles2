@@ -178,38 +178,63 @@ void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char*
         SDL_RenderFillRect(renderer, &progressFill);
     }
 
+    if (game.hasSecondStockSlot()) {
+        SDL_SetRenderDrawColor(renderer, 80, 45, 10, 255);
+        SDL_Rect taskRow2 = {745, 137, 274, 45};
+        SDL_RenderFillRect(renderer, &taskRow2);
+
+        SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+        SDL_Rect progressBg2 = {745, 165, 274, 8};
+        SDL_RenderFillRect(renderer, &progressBg2);
+
+        if (game.task2.active) {
+            const char* resNames[] = {"Food", "Timber", "Iron", "Gold"};
+
+            SDL_Surface* ls = TTF_RenderText_Solid(font, resNames[game.task2.res], yellow);
+            SDL_Texture* lt = SDL_CreateTextureFromSurface(renderer, ls);
+            SDL_Rect lr = {820, 144, ls->w, ls->h};
+            SDL_RenderCopy(renderer, lt, NULL, &lr);
+            SDL_FreeSurface(ls);
+            SDL_DestroyTexture(lt);
+
+            SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
+            SDL_Rect progressFill2 = {745, 165, (int)(274 * game.task2.progress()), 8};
+            SDL_RenderFillRect(renderer, &progressFill2);
+        }
+    }
+
     // Combat row background
     SDL_SetRenderDrawColor(renderer, game.combat.active ? 120 : 80, game.combat.active ? 0 : 45, 10, 255);
-    SDL_Rect combatRow = {745, 145, 274, 45};
+    SDL_Rect combatRow = {745, 184, 274, 45};
     SDL_RenderFillRect(renderer, &combatRow);
 
-    // Progress background - always visible
+    // Combat progress background - always visible
     SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
-    SDL_Rect combatProgressBg = {745, 173, 274, 8};
+    SDL_Rect combatProgressBg = {745, 212, 274, 8};
     SDL_RenderFillRect(renderer, &combatProgressBg);
 
     if (game.combat.active) {
         std::string label = "Attack: " + game.map.provinces[game.combat.targetProvince].name;
         SDL_Surface* ls = TTF_RenderText_Solid(font, label.c_str(), yellow);
         SDL_Texture* lt = SDL_CreateTextureFromSurface(renderer, ls);
-        SDL_Rect lr = {750, 152, ls->w, ls->h};
+        SDL_Rect lr = {750, 191, ls->w, ls->h};
         SDL_RenderCopy(renderer, lt, NULL, &lr);
         SDL_FreeSurface(ls);
         SDL_DestroyTexture(lt);
 
         SDL_SetRenderDrawColor(renderer, 220, 0, 0, 255);
-        SDL_Rect progressFill = {745, 173, (int)(274 * game.combat.progress()), 8};
+        SDL_Rect progressFill = {745, 212, (int)(274 * game.combat.progress()), 8};
         SDL_RenderFillRect(renderer, &progressFill);
 
         // Cancel button
         SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
-        SDL_Rect cancelBtn = {745, 155, 60, 22};
+        SDL_Rect cancelBtn = {745, 194, 60, 22};
         SDL_RenderFillRect(renderer, &cancelBtn);
         SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
         SDL_RenderDrawRect(renderer, &cancelBtn);
         SDL_Surface* cs = TTF_RenderText_Solid(font, "Cancel", yellow);
         SDL_Texture* ct = SDL_CreateTextureFromSurface(renderer, cs);
-        SDL_Rect cr = {748, 157, cs->w, cs->h};
+        SDL_Rect cr = {748, 196, cs->w, cs->h};
         SDL_RenderCopy(renderer, ct, NULL, &cr);
         SDL_FreeSurface(cs);
         SDL_DestroyTexture(ct);
@@ -533,8 +558,11 @@ void renderStockTab(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
         SDL_DestroyTexture(t);
 
         int ownedProvinces = game.countOwnedProvinces((ResourceType)i);
-        bool canStart = !game.task.active && ownedProvinces > 0 && game.availableWorkers >= 1;
-        bool isActive = game.task.active && game.task.res == (ResourceType)i;
+        bool isActive = (game.task.active && game.task.res == (ResourceType)i) ||
+                        (game.task2.active && game.task2.res == (ResourceType)i);
+        bool task1Available = !game.task.active;
+        bool task2Available = game.hasSecondStockSlot() && !game.task2.active;
+        bool canStart = (task1Available || task2Available) && ownedProvinces > 0 && game.availableWorkers >= 1;
         bool grayed = !isActive && !canStart;
 
         SDL_SetRenderDrawColor(renderer, grayed ? 50 : 30, grayed ? 50 : 60, grayed ? 50 : 10, 255);
@@ -550,7 +578,7 @@ void renderStockTab(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
         SDL_RenderCopy(renderer, bt, NULL, &br);
         SDL_FreeSurface(bs);
         SDL_DestroyTexture(bt);
-        if (!game.task.active && canStart) {
+        if (canStart) {
             // - button
             SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
             SDL_Rect minBtn = {862, rowY + 28, 22, 22};

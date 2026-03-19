@@ -77,6 +77,7 @@ public:
     Map map;
 
     CollectionTask task;
+    CollectionTask task2;
 
     void init();
     GameAction handleEvent(SDL_Event& event);
@@ -88,6 +89,8 @@ public:
     // admin tasks
     void startTask(ResourceType res, int workers);
     void cancelTask();
+    void startTask2(ResourceType res, int workers);
+    void cancelTask2();
     // combat
     void startCombat(int provinceId, int units);
     void resolveCombat();

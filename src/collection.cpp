@@ -29,3 +29,22 @@ void Game::cancelTask() {
     availableWorkers += task.workersAssigned;
     task = CollectionTask{};
 }
+
+void Game::startTask2(ResourceType res, int workers) {
+    int provinces = countOwnedProvinces(res);
+    if (provinces == 0 || workers < 1) return;
+    if (workers > availableWorkers) return;
+    int w = std::min(workers, 8) - 1;
+    int p = std::min(provinces, 5) - 1;
+    task2.active          = true;
+    task2.res             = res;
+    task2.workersAssigned = workers;
+    task2.daysRequired    = daysToCollect[w][p];
+    task2.daysAccumulated = 0;
+    availableWorkers     -= workers;
+}
+
+void Game::cancelTask2() {
+    availableWorkers += task2.workersAssigned;
+    task2 = CollectionTask{};
+}

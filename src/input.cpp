@@ -33,7 +33,6 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                 else if (x >= 882 && x < 953)  game.activeTab = game.activeTab == 2 ? -1 : 2;
                 else if (x >= 953 && x < 1024) game.activeTab = game.activeTab == 3 ? -1 : 3;
 
-                // Deselect all provinces when switching tabs
                 for (auto& p : game.map.provinces)
                     p.isSelected = false;
             }
@@ -42,29 +41,37 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                 game.map.handleClick(x, y);
 
             // Cancel combat button
-            if (x >= 745 && x <= 805 && y >= 155 && y <= 177)
+            if (x >= 745 && x <= 805 && y >= 194 && y <= 216)
                 game.cancelCombat();
 
             if (game.activeTab == 0) {
                 for (int i = 0; i < 4; i++) {
                     int rowY = 474 + (i * 60);
                     ResourceType res = (ResourceType)i;
-
+                    bool eitherTaskInactive = !game.task.active || !game.task2.active;
+                    SDL_Log("task.active=%d task2.active=%d eitherTaskInactive=%d", game.task.active, game.task2.active, eitherTaskInactive);
                     if (x >= 750 && x <= 850 && y >= rowY + 28 && y <= rowY + 50) {
                         if (game.task.active && game.task.res == res)
                             game.cancelTask();
+                        else if (game.task2.active && game.task2.res == res)
+                            game.cancelTask2();
                         else if (!game.task.active && game.countOwnedProvinces(res) > 0 && game.availableWorkers >= 1)
                             game.startTask(res, game.pendingWorkers[i]);
+                        else if (game.hasSecondStockSlot() && !game.task2.active && game.countOwnedProvinces(res) > 0 && game.availableWorkers >= 1)
+                            game.startTask2(res, game.pendingWorkers[i]);
                     }
 
                     if (!game.task.active) {
-                        if (x >= 862 && x <= 884 && y >= rowY + 28 && y <= rowY + 50) {
-                            if (game.pendingWorkers[i] > 1)
-                                game.pendingWorkers[i]--;
-                        }
-                        if (x >= 906 && x <= 928 && y >= rowY + 28 && y <= rowY + 50) {
-                            if (game.pendingWorkers[i] < game.availableWorkers)
-                                game.pendingWorkers[i]++;
+                        bool eitherTaskInactive = !game.task.active || !game.task2.active;
+                        if (eitherTaskInactive) {
+                            if (x >= 862 && x <= 884 && y >= rowY + 28 && y <= rowY + 50) {
+                                if (game.pendingWorkers[i] > 1)
+                                    game.pendingWorkers[i]--;
+                            }
+                            if (x >= 906 && x <= 928 && y >= rowY + 28 && y <= rowY + 50) {
+                                if (game.pendingWorkers[i] < game.totalWorkers)
+                                    game.pendingWorkers[i]++;
+                            }
                         }
                     }
                 }
@@ -84,6 +91,7 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                     }
                 }
             }
+
             // Military +/- buttons in province info panel
             for (auto& p : game.map.provinces) {
                 if (p.isSelected && p.owner != playerDynasty) {
