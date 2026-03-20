@@ -1,10 +1,11 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "ui/ui.h"
-#include "map.h"
-#include "collection.h"
-#include "combat.h"
+#include "../ui/ui.h"
+#include "../geography/map.h"
+#include "../resources/collection.h"
+#include "../military/combat.h"
+#include "../military/recruitment.h"
 #include <map>
 
 enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING, VICTORY };
@@ -79,6 +80,10 @@ public:
     Army playerArmy = {4, 2, 0};
     std::map<std::string, Army> dynastyArmies;
 
+    // For recruiting soldiers
+    RecruitTask recruit;
+    int pendingRecruitMilitary = 1;
+
     GameDate date = {2, 5, 1312};
 
     Uint32 lastTickTime = 0;
@@ -113,4 +118,10 @@ public:
     // AI functionality
     bool isDefeated(const std::string& dynasty) const;
     void updateAI();
+
+    // For recruiting soldiers
+    void startRecruitment(UnitType unit, int militaryUnits);
+    void resolveRecruitment();
+    void cancelRecruitment();
+    bool canAffordRecruitment(UnitType unit) const;
 };

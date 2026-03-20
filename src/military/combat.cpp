@@ -1,5 +1,5 @@
 #include "combat.h"
-#include "game.h"
+#include "../engine/game.h"
 #include <cstdlib>
 
 extern std::string playerDynasty;

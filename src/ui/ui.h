@@ -2,9 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
-#include "../map.h"
-#include "../game.h"
-#include "../combat.h"
+#include "../geography/map.h"
+#include "../engine/game.h"
+#include "../military/combat.h"
 
 class Game; // forward declare
 
@@ -49,3 +49,4 @@ void renderTabBar(SDL_Renderer* renderer, TTF_Font* font, int activeTab); // Ren
 void renderInfoPanel(SDL_Renderer* renderer, TTF_Font* font, const char* dateStr, Game& game);
 void renderCombatRow(SDL_Renderer* renderer, TTF_Font* font, Game& game); // Render combat progress
 void renderVictory(SDL_Renderer* renderer, TTF_Font* font, const std::string& dynasty, int score, const std::string& date); // Render victory screen
+void renderArmyTab(SDL_Renderer* renderer, TTF_Font* font, Game& game);

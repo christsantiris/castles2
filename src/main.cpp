@@ -1,14 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
-#include "game.h"
 #include "input.h"
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#include "game.h"
-#include "input.h"
+#include "./engine/game.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);

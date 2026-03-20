@@ -1,5 +1,6 @@
 #include "input.h"
 #include "ui/ui.h"
+#include "military/recruitment.h"
 
 extern GameScreen screen;
 extern std::string playerDynasty;
@@ -70,6 +71,32 @@ GameAction handleInput(SDL_Event& event, Game& game) {
                             if (game.pendingWorkers[i] < game.totalWorkers)
                                 game.pendingWorkers[i]++;
                         }
+                    }
+                }
+            }
+
+            if (game.activeTab == 1) {
+                // +/- pending recruit military
+                if (!game.recruit.active) {
+                    if (x >= 840 && x <= 862 && y >= 688 && y <= 710) {
+                        if (game.pendingRecruitMilitary > 1)
+                            game.pendingRecruitMilitary--;
+                    }
+                    if (x >= 868 && x <= 890 && y >= 688 && y <= 710) {
+                        if (game.pendingRecruitMilitary < game.availableMilitary)
+                            game.pendingRecruitMilitary++;
+                    }
+                }
+
+                // Recruit / Cancel buttons
+                UnitType unitTypes[] = {UNIT_INFANTRY, UNIT_ARCHERS, UNIT_KNIGHTS};
+                for (int i = 0; i < 3; i++) {
+                    int rowY = 490 + (i * 65);
+                    if (x >= 750 && x <= 850 && y >= rowY + 28 && y <= rowY + 50) {
+                        if (game.recruit.active && game.recruit.unitType == unitTypes[i])
+                            game.cancelRecruitment();
+                        else if (!game.recruit.active && game.canAffordRecruitment(unitTypes[i]))
+                            game.startRecruitment(unitTypes[i], game.pendingRecruitMilitary);
                     }
                 }
             }

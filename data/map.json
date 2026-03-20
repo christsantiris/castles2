@@ -3,7 +3,7 @@
         {
             "id": 0,
             "name": "Bulgaria",
-            "owner": "Kantakouzenos",
+            "owner": "neutral",
             "resource": "Timber",
             "neighbors": [1, 5],
             "polygon": [
@@ -55,7 +55,7 @@
         {
             "id": 4,
             "name": "Pontus",
-            "owner": "neutral",
+            "owner": "Palaiologos",
             "resource": "Iron",
             "neighbors": [3, 8],
             "polygon": [
@@ -81,7 +81,7 @@
         {
             "id": 6,
             "name": "Chios",
-            "owner": "neutral",
+            "owner": "Kantakouzenos",
             "resource": "Gold",
             "neighbors": [1, 5, 10],
             "polygon": [
@@ -94,7 +94,7 @@
         {
             "id": 7,
             "name": "Galatia",
-            "owner": "neutral",
+            "owner": "Phokas",
             "resource": "Food",
             "neighbors": [3, 8, 11],
             "polygon": [
@@ -120,7 +120,7 @@
         {
             "id": 9,
             "name": "Thessaly",
-             "owner": "Palaiologos",
+            "owner": "Doukas",
             "resource": "Food",
             "neighbors": [5, 10, 13],
             "polygon": [
@@ -146,7 +146,7 @@
         {
             "id": 11,
             "name": "Cilicia",
-            "owner": "Komnenos",
+            "owner": "neutral",
             "resource": "Iron",
             "neighbors": [7, 12, 15],
             "polygon": [
@@ -159,7 +159,7 @@
         {
             "id": 12,
             "name": "Syria",
-            "owner": "neutral",
+            "owner": "Komnenos",
             "resource": "Gold",
             "neighbors": [8, 11, 20],
             "polygon": [
@@ -224,7 +224,7 @@
         {
             "id": 17,
             "name": "Crete",
-            "owner": "Doukas",
+            "owner": "neutral",
             "resource": "Food",
             "neighbors": [14, 16, 22],
             "polygon": [
@@ -237,7 +237,7 @@
         {
             "id": 18,
             "name": "Egypt",
-            "owner": "Phokas",
+            "owner": "neutral",
             "resource": "Gold",
             "neighbors": [15, 21, 22],
             "polygon": [

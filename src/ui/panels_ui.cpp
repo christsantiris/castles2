@@ -1,5 +1,5 @@
 #include "ui.h"
-#include "../game.h"
+#include "../engine/game.h"
 
 extern std::string playerDynasty;
 
@@ -227,5 +227,122 @@ void renderStockTab(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
             SDL_FreeSurface(ps);
             SDL_DestroyTexture(pt);
         }
+    }
+}
+
+void renderArmyTab(SDL_Renderer* renderer, TTF_Font* font, Game& game) {
+    SDL_Color gold  = {255, 215, 0, 255};
+    SDL_Color white = {255, 255, 255, 255};
+    SDL_Color gray  = {150, 150, 150, 255};
+
+    // Clear panel
+    SDL_SetRenderDrawColor(renderer, 60, 30, 10, 255);
+    SDL_Rect panel = {745, 464, 274, 299};
+    SDL_RenderFillRect(renderer, &panel);
+
+    // Army composition header
+    SDL_Surface* hs = TTF_RenderText_Solid(font, "Army", gold);
+    SDL_Texture* ht = SDL_CreateTextureFromSurface(renderer, hs);
+    SDL_Rect hr = {750, 468, hs->w, hs->h};
+    SDL_RenderCopy(renderer, ht, NULL, &hr);
+    SDL_FreeSurface(hs);
+    SDL_DestroyTexture(ht);
+
+    const char* unitNames[] = {"Infantry", "Archers", "Knights"};
+    int unitCounts[] = {game.playerArmy.infantry, game.playerArmy.archers, game.playerArmy.knights};
+    UnitType unitTypes[] = {UNIT_INFANTRY, UNIT_ARCHERS, UNIT_KNIGHTS};
+
+    for (int i = 0; i < 3; i++) {
+        int rowY = 490 + (i * 65);
+
+        // Row background
+        SDL_SetRenderDrawColor(renderer, 80, 40, 10, 255);
+        SDL_Rect row = {748, rowY, 270, 55};
+        SDL_RenderFillRect(renderer, &row);
+
+        // Unit name and count
+        std::string label = std::string(unitNames[i]) + ": " + std::to_string(unitCounts[i]) + "/10";
+        SDL_Surface* ls = TTF_RenderText_Solid(font, label.c_str(), gold);
+        SDL_Texture* lt = SDL_CreateTextureFromSurface(renderer, ls);
+        SDL_Rect lr = {752, rowY + 4, ls->w, ls->h};
+        SDL_RenderCopy(renderer, lt, NULL, &lr);
+        SDL_FreeSurface(ls);
+        SDL_DestroyTexture(lt);
+
+        // Skip Knights if not unlocked
+        if (i == 2 && !game.hasKnights()) {
+            SDL_Surface* ns = TTF_RenderText_Solid(font, "Locked", gray);
+            SDL_Texture* nt = SDL_CreateTextureFromSurface(renderer, ns);
+            SDL_Rect nr = {752, rowY + 28, ns->w, ns->h};
+            SDL_RenderCopy(renderer, nt, NULL, &nr);
+            SDL_FreeSurface(ns);
+            SDL_DestroyTexture(nt);
+            continue;
+        }
+
+        bool isActive = game.recruit.active && game.recruit.unitType == unitTypes[i];
+        bool canStart = !game.recruit.active && game.canAffordRecruitment(unitTypes[i]) 
+                        && game.availableMilitary >= 1 && unitCounts[i] < 10;
+        bool grayed = !isActive && !canStart;
+
+        // Recruit / Cancel button
+        SDL_SetRenderDrawColor(renderer, grayed ? 50 : 30, grayed ? 50 : 60, grayed ? 50 : 10, 255);
+        SDL_Rect btn = {750, rowY + 28, 100, 22};
+        SDL_RenderFillRect(renderer, &btn);
+        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+        SDL_RenderDrawRect(renderer, &btn);
+
+        const char* btnLabel = isActive ? "Cancel" : "Recruit";
+        SDL_Surface* bs = TTF_RenderText_Solid(font, btnLabel, grayed ? gray : gold);
+        SDL_Texture* bt = SDL_CreateTextureFromSurface(renderer, bs);
+        SDL_Rect br = {800 - bs->w / 2, rowY + 30, bs->w, bs->h};
+        SDL_RenderCopy(renderer, bt, NULL, &br);
+        SDL_FreeSurface(bs);
+        SDL_DestroyTexture(bt);
+
+        // Progress bar if active
+        if (isActive) {
+            SDL_SetRenderDrawColor(renderer, 30, 15, 5, 255);
+            SDL_Rect pbg = {750, rowY + 52, 270, 6};
+            SDL_RenderFillRect(renderer, &pbg);
+            SDL_SetRenderDrawColor(renderer, 0, 200, 0, 255);
+            SDL_Rect pfill = {750, rowY + 52, (int)(270 * game.recruit.progress()), 6};
+            SDL_RenderFillRect(renderer, &pfill);
+        }
+    }
+
+    // Pending military units selector
+    if (!game.recruit.active) {
+        std::string wLabel = "Units: " + std::to_string(game.pendingRecruitMilitary);
+        SDL_Surface* ws = TTF_RenderText_Solid(font, wLabel.c_str(), white);
+        SDL_Texture* wt = SDL_CreateTextureFromSurface(renderer, ws);
+        SDL_Rect wr = {750, 690, ws->w, ws->h};
+        SDL_RenderCopy(renderer, wt, NULL, &wr);
+        SDL_FreeSurface(ws);
+        SDL_DestroyTexture(wt);
+
+        SDL_SetRenderDrawColor(renderer, 120, 0, 0, 255);
+        SDL_Rect minBtn = {840, 688, 22, 22};
+        SDL_RenderFillRect(renderer, &minBtn);
+        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+        SDL_RenderDrawRect(renderer, &minBtn);
+        SDL_Surface* ms = TTF_RenderText_Solid(font, "-", gold);
+        SDL_Texture* mt = SDL_CreateTextureFromSurface(renderer, ms);
+        SDL_Rect mr = {846, 690, ms->w, ms->h};
+        SDL_RenderCopy(renderer, mt, NULL, &mr);
+        SDL_FreeSurface(ms);
+        SDL_DestroyTexture(mt);
+
+        SDL_SetRenderDrawColor(renderer, 0, 120, 0, 255);
+        SDL_Rect plusBtn = {868, 688, 22, 22};
+        SDL_RenderFillRect(renderer, &plusBtn);
+        SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
+        SDL_RenderDrawRect(renderer, &plusBtn);
+        SDL_Surface* ps = TTF_RenderText_Solid(font, "+", gold);
+        SDL_Texture* pt = SDL_CreateTextureFromSurface(renderer, ps);
+        SDL_Rect pr = {874, 690, ps->w, ps->h};
+        SDL_RenderCopy(renderer, pt, NULL, &pr);
+        SDL_FreeSurface(ps);
+        SDL_DestroyTexture(pt);
     }
 }

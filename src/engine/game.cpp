@@ -1,6 +1,6 @@
 #include "game.h"
-#include "ui/ui.h"
-#include "input.h"
+#include "../ui/ui.h"
+#include "../input.h"
 
 GameScreen screen = LANDING;
 std::string playerDynasty = "";
@@ -21,6 +21,8 @@ void Game::render(SDL_Renderer* renderer, TTF_Font* font, bool musicOn) {
 
         if (activeTab == 0)
             renderStockTab(renderer, font, *this);
+        if (activeTab == 1)
+            renderArmyTab(renderer, font, *this);
         if (activeTab == 3) {
             renderOptsPanel(renderer, font, musicOn);
         }
@@ -75,6 +77,12 @@ void Game::update() {
             battleMessageTimer--;
             if (battleMessageTimer == 0)
                 battleMessage = "";
+        }
+
+        if (recruit.active) {
+            recruit.daysAccumulated++;
+            if (recruit.daysAccumulated >= recruit.daysRequired)
+                resolveRecruitment();
         }
 
         aiTickCounter++;

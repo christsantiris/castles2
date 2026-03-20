@@ -25,3 +25,7 @@ make run
 - [ ] Upkeep like paying and feeding troops
 - [ ] Recruit additional troops. Infantry costs iron. Archers cost timber.Knights cost 2x Iron
 - [ ] Spying
+- [ ] Easy, Medium and Hard mode
+- [ ] Random starting locations
+- [ ] Randomized Resources
+- [ ] Additional workers of each type at score thresholds
