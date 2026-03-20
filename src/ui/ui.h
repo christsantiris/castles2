@@ -2,9 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
-#include "../map.h"
-#include "../game.h"
-#include "../combat.h"
+#include "../geography/map.h"
+#include "../engine/game.h"
+#include "../military/combat.h"
 
 class Game; // forward declare
 

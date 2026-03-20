@@ -1,10 +1,10 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "ui/ui.h"
-#include "map.h"
-#include "collection.h"
-#include "combat.h"
+#include "../ui/ui.h"
+#include "../geography/map.h"
+#include "../resources/collection.h"
+#include "../military/combat.h"
 #include <map>
 
 enum GameScreen { LANDING, DYNASTY_SELECT, PLAYING, VICTORY };

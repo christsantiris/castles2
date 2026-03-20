@@ -66,11 +66,11 @@ void renderDynastySelect(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_DestroyTexture(titleTex);
 
     const char* dynasties[] = {
-        "Kantakouzenos - Starts in Bulgaria",
-        "Doukas        - Starts in Morea",
-        "Palaiologos   - Starts in Achaia",
-        "Phokas        - Starts in Egypt",
-        "Komnenos      - Starts in Pontus"
+        "Kantakouzenos - Starts in Chios",
+        "Doukas        - Starts in Thessaly",
+        "Palaiologos   - Starts in Pontus",
+        "Phokas        - Starts in Galatia",
+        "Komnenos      - Starts in Syria"
     };
 
     for (int i = 0; i < 5; i++) {

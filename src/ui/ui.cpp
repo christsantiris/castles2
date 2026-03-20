@@ -1,5 +1,5 @@
 #include "ui.h"
-#include "../game.h"
+#include "../engine/game.h"
 
 void renderUI(SDL_Renderer* renderer, TTF_Font* font, int activeTab, const char* dateStr, Game& game) {
     // Map area background

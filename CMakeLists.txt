@@ -11,6 +11,11 @@ find_package(SDL2_mixer REQUIRED)
 file(GLOB SOURCES 
     src/*.cpp
     src/ui/*.cpp
+    src/ai/*.cpp
+    src/engine/*.cpp
+    src/geography/*.cpp
+    src/military/*.cpp
+    src/resources/*.cpp
 )
 
 add_executable(castles3 ${SOURCES})

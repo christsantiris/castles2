@@ -1,6 +1,6 @@
 #include "game.h"
-#include "ui/ui.h"
-#include "input.h"
+#include "../ui/ui.h"
+#include "../input.h"
 
 GameScreen screen = LANDING;
 std::string playerDynasty = "";
