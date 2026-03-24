@@ -20,8 +20,8 @@
             "resource": "Food",
             "neighbors": [0, 2, 3, 4 ],
             "polygon": [
-                {"x": 180, "y": 10},
-                {"x": 330, "y": 10},
+                {"x": 180, "y": 0},
+                {"x": 330, "y": 0},
                 {"x": 330, "y": 160},
                 {"x": 180, "y": 160}
             ]
@@ -33,8 +33,8 @@
             "resource": "Timber",
             "neighbors": [1, 3],
             "polygon": [
-                {"x": 10,  "y": 10},
-                {"x": 180, "y": 10},
+                {"x": 10,  "y": 0},
+                {"x": 180, "y": 0},
                 {"x": 180, "y": 160},
                 {"x": 10,  "y": 160}
             ]
@@ -55,7 +55,7 @@
         {
             "id": 4,
             "name": "Thrace (4)",
-            "owner": "neutral",
+            "owner": "Iron",
             "resource": "Food",
             "neighbors": [0, 1, 3, 10],
             "polygon": [
@@ -121,7 +121,7 @@
             "id": 9,
             "name": "Achaia (9)",
             "owner": "Doukas",
-            "resource": "Food",
+            "resource": "Iron",
             "neighbors": [3, 10, 16],
             "polygon": [
                 {"x": 10,  "y": 300},
@@ -173,7 +173,7 @@
             "id": 13,
             "name": "Cyprus (13)",
             "owner": "neutral",
-            "resource": "Gold",
+            "resource": "Timber",
             "neighbors": [11],
             "polygon": [
                 {"x": 420, "y": 450},
@@ -212,7 +212,7 @@
             "id": 16,
             "name": "Morea (16)",
             "owner": "neutral",
-            "resource": "Food",
+            "resource": "Iron",
             "neighbors": [9, 10, 16],
             "polygon": [
                 {"x": 100,  "y": 450},
@@ -236,7 +236,7 @@
         },
         {
             "id": 18,
-            "name": "Sicilia (22)",
+            "name": "Sicilia (18)",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [17],
