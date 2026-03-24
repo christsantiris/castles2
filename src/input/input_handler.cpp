@@ -2,6 +2,9 @@
 #include "../core/systems/map_system.h"
 #include "../core/systems/game_system.h"
 #include "../core/systems/resource_system.h"
+#include "../core/systems/combat_system.h"
+
+static const int PANEL_X = 950;
 
 namespace InputHandler {
 
@@ -34,10 +37,61 @@ namespace InputHandler {
             }
         }
 
+        // Attack button in province info panel
+        if (x >= 950 && world.battle.phase == BattlePhase::None) {
+            int infoY = 60 + (36 + 4) * 6 + 4 + 40;
+
+            // Military worker minus button
+            if (x >= PANEL_X + 170 && x <= PANEL_X + 190 &&
+                y >= infoY + 103 && y <= infoY + 123) {
+                if (world.pendingMilitaryWorkers > 1)
+                    world.pendingMilitaryWorkers--;
+            }
+
+            // Military worker plus button
+            if (x >= PANEL_X + 196 && x <= PANEL_X + 216 &&
+                y >= infoY + 103 && y <= infoY + 123) {
+                if (world.pendingMilitaryWorkers < world.workerPool.availableMilitaryWorkers)
+                    world.pendingMilitaryWorkers++;
+            }
+
+            // Attack button
+            if (x >= PANEL_X + 10 && x <= PANEL_X + 210 &&
+                y >= infoY + 130 && y <= infoY + 166) {
+                for (auto& p : world.provinces) {
+                    if (!p.isSelected) continue;
+                    CombatSystem::startMarch(world, p.id, world.pendingMilitaryWorkers);
+                    break;
+                }
+            }
+        }
+
+        // Battle screen buttons
+        if (world.battle.phase != BattlePhase::None && x < 950) {
+            int barY = 720;
+            if (y >= barY && y <= barY + 60) {
+                if (x >= 300 && x <= 400) {
+                    if (world.battle.phase == BattlePhase::Preparing)
+                        world.battle.phase = BattlePhase::Running;
+                    else if (world.battle.phase == BattlePhase::Running)
+                        CombatSystem::pauseBattle(world);
+                    else if (world.battle.phase == BattlePhase::Paused)
+                        CombatSystem::resumeBattle(world);
+                    else if (world.battle.phase == BattlePhase::Resolved)
+                        world.battle = BattleState{};
+                }
+                if (x >= 420 && x <= 520)
+                    CombatSystem::retreat(world);
+                return;
+            }
+            return;
+        }
+
         // Map clicks
-        if (x < 950)
+        if (x < 950) {
             world.ctx.activeTab = -1;
             MapSystem::handleClick(world, x, y);
+        }
 
         // Stock tab clicks
         if (world.ctx.activeTab == 0 && x >= 950) {

@@ -127,3 +127,28 @@ struct GameContext {
     std::string battleMessage      = "";
     int         battleMessageTimer = 0;
 };
+
+enum class BattlePhase { None, Preparing, Running, Paused, Resolved };
+
+struct BattleUnit {
+    float x = 0.0f;
+    float y = 0.0f;
+    int health = 10;
+    bool alive = true;
+    int type = 0; // 0=infantry, 1=archer, 2=knight
+};
+
+struct BattleState {
+    BattlePhase phase = BattlePhase::None;
+    int targetProvinceId = -1;
+    std::vector<BattleUnit> playerUnits;
+    std::vector<BattleUnit> aiUnits;
+    int playerHealth = 100;
+    int aiHealth = 100;
+    int playerMaxHealth = 100;
+    int aiMaxHealth = 100;
+    float roundTimer = 0.0f;
+    float roundInterval = 1.0f;
+    bool playerWon = false;
+    std::string statusText = "";
+};

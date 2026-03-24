@@ -5,6 +5,7 @@
 #include <string>
 
 struct World {
+    int pendingMilitaryWorkers = 1;
     // ── Map ───────────────────────────────────────────────────────────────────
     std::vector<ProvinceComponent> provinces;
 
@@ -25,6 +26,9 @@ struct World {
 
     // ── Game context ──────────────────────────────────────────────────────────
     GameContext ctx;
+
+    // ── Interactive battles ───────────────────────────────────────────────────
+    BattleState battle;
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     ProvinceComponent* findProvince(int id);

@@ -1,6 +1,7 @@
 #include "panel_renderer.h"
 #include "../core/systems/date_system.h"
 #include "../core/systems/unlock_system.h"
+#include "../core/systems/combat_system.h"
 
 namespace PanelRenderer {
 
@@ -232,6 +233,36 @@ static void renderStockTab(SDL_Renderer* r, TTF_Font* font, World& world) {
                         PANEL_X + 10, infoY + 45, WHITE);
                 drawText(r, font, "Resource: " + selected->resource,
                         PANEL_X + 10, infoY + 75, WHITE);
+            }
+
+            bool isEnemy = selected->owner != world.ctx.playerDynasty;
+            bool isAdj = CombatSystem::isAdjacent(world, selected->id);
+
+            if (isEnemy && isAdj && world.battle.phase == BattlePhase::None) {
+                bool marching = false;
+                for (int s = 0; s < 2; s++)
+                    if (world.combatTasks.slots[s].active &&
+                        world.combatTasks.slots[s].targetProvinceId == selected->id)
+                        marching = true;
+
+                if (!marching) {
+                    std::string wLabel = "Military: " + std::to_string(world.pendingMilitaryWorkers);
+                    drawText(r, font, wLabel, PANEL_X + 10, infoY + 105, WHITE);
+
+                    drawRect(r, PANEL_X + 170, infoY + 103, 20, 20, {120, 0, 0, 255});
+                    drawBorder(r, PANEL_X + 170, infoY + 103, 20, 20, GOLD);
+                    drawTextCentered(r, font, "-", PANEL_X + 170, infoY + 105, 20, WHITE);
+
+                    drawRect(r, PANEL_X + 196, infoY + 103, 20, 20, {0, 120, 0, 255});
+                    drawBorder(r, PANEL_X + 196, infoY + 103, 20, 20, GOLD);
+                    drawTextCentered(r, font, "+", PANEL_X + 196, infoY + 105, 20, WHITE);
+
+                    drawRect(r, PANEL_X + 10, infoY + 130, 200, 36, {0, 100, 0, 255});
+                    drawBorder(r, PANEL_X + 10, infoY + 130, 200, 36, GOLD);
+                    drawTextCentered(r, font, "ATTACK", PANEL_X + 10, infoY + 140, 200, GOLD);
+                } else {
+                    drawText(r, font, "Marching...", PANEL_X + 10, infoY + 110, GOLD);
+                }
             }
         } else if (world.ctx.activeTab == 0) {
             renderStockTab(r, font, world);

@@ -8,6 +8,8 @@
 #include "renderer/topbar_renderer.h"
 #include "renderer/landing_renderer.h"
 #include "input/input_handler.h"
+#include "renderer/battle_renderer.h"
+#include "core/systems/combat_system.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -45,9 +47,19 @@ int main() {
         }
 
         Uint32 now = SDL_GetTicks();
-        if (world.ctx.screen == GameScreen::Playing && now - lastTick >= tickInterval) {
-            lastTick = now;
-            GameSystem::tick(world);
+        float deltaTime = (now - lastTick) / 1000.0f;
+
+        if (world.ctx.screen == GameScreen::Playing) {
+            CombatSystem::updateBattle(world, deltaTime);
+
+            if (now - lastTick >= tickInterval) {
+                lastTick = now;
+                GameSystem::tick(world);
+
+                // Auto close resolved battle after delay
+                if (world.battle.phase == BattlePhase::Resolved)
+                    world.battle = BattleState{};
+            }
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -59,6 +71,7 @@ int main() {
             MapRenderer::render(renderer, font, world);
             PanelRenderer::render(renderer, font, world);
             TopBarRenderer::render(renderer, font, world);
+            BattleRenderer::render(renderer, font, world);
         }
 
         SDL_RenderPresent(renderer);

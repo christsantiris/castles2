@@ -2,6 +2,7 @@
 #include "date_system.h"
 #include "resource_system.h"
 #include "unlock_system.h"
+#include "combat_system.h"
 #include <algorithm>
 #include <random>
 
@@ -21,6 +22,7 @@ namespace GameSystem {
         DateSystem::advance(world.date);
         world.ctx.score++;
         ResourceSystem::tick(world);
+        CombatSystem::tickMarch(world);
         UnlockSystem::applyUnlocks(world);
 
         if (world.ctx.battleMessageTimer > 0) {
