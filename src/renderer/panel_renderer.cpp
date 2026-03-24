@@ -139,13 +139,6 @@ namespace PanelRenderer {
     }
 
 static void renderStockTab(SDL_Renderer* r, TTF_Font* font, World& world) {
-    // Close button
-    int closeX = PANEL_X + PANEL_W - 28;
-    int closeY = PANEL_Y + (BAR_H + BAR_MARGIN) * 6 + BAR_MARGIN + TAB_H + 4;
-    drawRect(r, closeX, closeY, 22, 22, {120, 0, 0, 255});
-    drawBorder(r, closeX, closeY, 22, 22, GOLD);
-    drawTextCentered(r, font, "X", closeX, closeY + 2, 22, GOLD);
-
     const char* resNames[] = {"Food", "Timber", "Iron", "Gold"};
         ResourceType resTypes[] = {
             ResourceType::Food, ResourceType::Timber,

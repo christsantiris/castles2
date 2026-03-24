@@ -41,12 +41,6 @@ namespace InputHandler {
 
         // Stock tab clicks
         if (world.ctx.activeTab == 0 && x >= 950) {
-            int closeX = 950 + 330 - 28;
-            int closeY = 60 + (36 + 4) * 6 + 4 + 40 + 4;
-            if (x >= closeX && x <= closeX + 22 && y >= closeY && y <= closeY + 22) {
-                world.ctx.activeTab = -1;
-                return;
-            }
             int infoY = 60 + (36 + 4) * 6 + 4 + 40;
             int rowH = 54;
             int baseX = 958;
