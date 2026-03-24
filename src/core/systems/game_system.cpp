@@ -1,5 +1,6 @@
 #include "game_system.h"
 #include "date_system.h"
+#include "resource_system.h"
 #include <algorithm>
 #include <random>
 
@@ -19,6 +20,8 @@ namespace GameSystem {
         DateSystem::advance(world.date);
         world.ctx.score++;
 
+        ResourceSystem::tick(world);
+
         if (world.ctx.battleMessageTimer > 0) {
             world.ctx.battleMessageTimer--;
             if (world.ctx.battleMessageTimer == 0)
@@ -29,6 +32,7 @@ namespace GameSystem {
     bool isVictory(const World& world) {
         for (auto& p : world.provinces)
             if (p.name.find("Constantinople") != std::string::npos
+            
                 && p.owner == world.ctx.playerDynasty)
                 return true;
         return false;
@@ -43,19 +47,28 @@ namespace GameSystem {
             "Kantakouzenos", "Doukas", "Palaiologos", "Phokas", "Komnenos"
         };
 
-        // Collect eligible province ids (not Constantinople)
-        std::vector<int> eligible;
+        // Reset all to neutral first
         for (auto& p : world.provinces)
-            if (p.name.find("Constantinople") == std::string::npos)
-                eligible.push_back(p.id);
+            p.owner = "neutral";
+
+        // Baldwin II always gets Constantinople
+        for (auto& p : world.provinces)
+            if (p.name == "Constantinople")
+                p.owner = "Baldwin II";
+
+        // Collect eligible province indices (neutral only)
+        std::vector<int> eligible;
+        for (int i = 0; i < (int)world.provinces.size(); i++)
+            if (world.provinces[i].owner == "neutral")
+                eligible.push_back(i);
 
         // Shuffle
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(eligible.begin(), eligible.end(), g);
 
-        // Assign one province per dynasty
+        // Assign exactly one province per dynasty
         for (int i = 0; i < (int)dynasties.size(); i++)
-        world.provinces[eligible[i]].owner = dynasties[i];
+            world.provinces[eligible[i]].owner = dynasties[i];
     }
 }

@@ -7,6 +7,7 @@
 #include "renderer/panel_renderer.h"
 #include "renderer/topbar_renderer.h"
 #include "renderer/landing_renderer.h"
+#include "input/input_handler.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -39,30 +40,8 @@ int main() {
     bool running = true;
     while (running) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) running = false;
-
-            if (event.type == SDL_MOUSEBUTTONDOWN) {
-                int x = event.button.x;
-                int y = event.button.y;
-
-                if (world.ctx.screen == GameScreen::Landing) {
-                    // Cycle dynasty
-                    if (x >= 420 && x <= 860 && y >= 280 && y <= 320)
-                        landingState.dynastyIndex = (landingState.dynastyIndex + 1) % 5;
-                    // PLAY button
-                    if (x >= 440 && x <= 520 && y >= 580 && y <= 620) {
-                        world.ctx.playerDynasty = landingState.selectedDynasty();
-                        GameSystem::assignStartingProvinces(world);
-                        world.ctx.screen = GameScreen::Playing;
-                    }
-                    // EXIT button
-                    if (x >= 680 && x <= 760 && y >= 580 && y <= 620)
-                        running = false;
-                }
-
-                if (world.ctx.screen == GameScreen::Playing)
-                    MapSystem::handleClick(world, x, y);
-            }
+            if (!InputHandler::handle(event, world, landingState))
+                running = false;
         }
 
         Uint32 now = SDL_GetTicks();

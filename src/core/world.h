@@ -31,4 +31,5 @@ struct World {
     int countOwnedProvinces(const std::string& dynasty, ResourceType res) const;
     int countOwnedProvinces(const std::string& dynasty) const;
     bool isDefeated(const std::string& dynasty) const;
+    int pendingWorkers[4] = {1, 1, 1, 1};
 };

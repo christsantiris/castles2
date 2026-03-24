@@ -4,5 +4,5 @@
 #include "../core/world.h"
 
 namespace PanelRenderer {
-    void render(SDL_Renderer* renderer, TTF_Font* font, const World& world);
+    void render(SDL_Renderer* renderer, TTF_Font* font, World& world);
 }

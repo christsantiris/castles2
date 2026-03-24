@@ -138,6 +138,68 @@ namespace PanelRenderer {
         }
     }
 
+    static void renderStockTab(SDL_Renderer* r, TTF_Font* font, World& world) {
+        const char* resNames[] = {"Food", "Timber", "Iron", "Gold"};
+        ResourceType resTypes[] = {
+            ResourceType::Food, ResourceType::Timber,
+            ResourceType::Iron, ResourceType::Gold
+        };
+        int stockValues[] = {
+            world.resources.food, world.resources.timber,
+            world.resources.iron, world.resources.gold
+        };
+
+        int infoY = PANEL_Y + (BAR_H + BAR_MARGIN) * 6 + BAR_MARGIN + TAB_H;
+        int y = infoY + 10;
+        int x = PANEL_X + 8;
+        int w = PANEL_W - 16;
+        int rowH = 50;
+
+        for (int i = 0; i < 4; i++) {
+            // Row background
+            drawRect(r, x, y, w, rowH, WOOD_MID);
+            drawBorder(r, x, y, w, rowH, GOLD);
+
+            // Resource name and current stock
+            std::string label = std::string(resNames[i]) + ": " + std::to_string(stockValues[i]);
+            drawText(r, font, label, x + 6, y + 4, GOLD);
+
+            // Worker count selector
+            std::string wLabel = "W:" + std::to_string(world.pendingWorkers[i]);
+            drawText(r, font, wLabel, x + 6, y + 26, WHITE);
+
+            // Minus button
+            drawRect(r, x + 60, y + 24, 20, 20, {120, 0, 0, 255});
+            drawBorder(r, x + 60, y + 24, 20, 20, GOLD);
+            drawTextCentered(r, font, "-", x + 60, y + 26, 20, WHITE);
+
+            // Plus button
+            drawRect(r, x + 86, y + 24, 20, 20, {0, 120, 0, 255});
+            drawBorder(r, x + 86, y + 24, 20, 20, GOLD);
+            drawTextCentered(r, font, "+", x + 86, y + 26, 20, WHITE);
+
+            // Check if this resource has an active task
+            bool isActive = false;
+            int activeSlot = -1;
+            for (int s = 0; s < 2; s++) {
+                if (world.collectionTasks.slots[s].active &&
+                    world.collectionTasks.slots[s].resource == resTypes[i]) {
+                    isActive = true;
+                    activeSlot = s;
+                    break;
+                }
+            }
+
+            // Collect / Cancel button
+            SDL_Color btnColor = isActive ? SDL_Color{120, 0, 0, 255} : SDL_Color{0, 80, 0, 255};
+            drawRect(r, x + 160, y + 24, 80, 20, btnColor);
+            drawBorder(r, x + 160, y + 24, 80, 20, GOLD);
+            drawTextCentered(r, font, isActive ? "Cancel" : "Collect", x + 160, y + 26, 80, GOLD);
+
+            y += rowH + 4;
+        }
+    }
+
     static void renderInfoArea(SDL_Renderer* r, TTF_Font* font, const World& world) {
         int infoY = PANEL_Y + (BAR_H + BAR_MARGIN) * 6 + BAR_MARGIN + TAB_H;
         int infoH = PANEL_H - infoY;
@@ -163,6 +225,9 @@ namespace PanelRenderer {
             int dotX = PANEL_X + 10;
 
             // Date row
+            // if (!world.ctx.playerDynasty.empty())
+            //     drawTextCentered(r, font, "Playing as " + world.ctx.playerDynasty,
+            //                     PANEL_X, infoY + 4, PANEL_W, GOLD);
             drawRect(r, PANEL_X + 4, infoY + 20, PANEL_W - 8, 36, WOOD_MID);
             drawBorder(r, PANEL_X + 4, infoY + 20, PANEL_W - 8, 36, GOLD);
             SDL_SetRenderDrawColor(r, DOT.r, DOT.g, DOT.b, DOT.a);
@@ -186,11 +251,14 @@ namespace PanelRenderer {
         }
     }
 
-    void render(SDL_Renderer* renderer, TTF_Font* font, const World& world) {
+    void render(SDL_Renderer* renderer, TTF_Font* font, World& world) {
         drawRect(renderer, PANEL_X, PANEL_Y, PANEL_W, PANEL_H - PANEL_Y, WOOD_DARK);
         renderTaskBars(renderer, font, world);
         renderTabs(renderer, font, world.ctx.activeTab);
-        renderInfoArea(renderer, font, world);
+        if (world.ctx.activeTab == 0)
+            renderStockTab(renderer, font, world);
+        else
+            renderInfoArea(renderer, font, world);
     }
 
 }

@@ -119,6 +119,10 @@ namespace TopBarRenderer {
         drawIconBox(renderer, font, x, "IRON",   std::to_string(world.resources.iron),   COL_RES);
         x += boxW + gap;
         drawIconBox(renderer, font, x, "GOLD",   std::to_string(world.resources.gold),   COL_RES);
+
+        x += boxW + gap + 20;
+        if (!world.ctx.playerDynasty.empty())
+            drawText(renderer, font, "Playing as " + world.ctx.playerDynasty, 1050, 20, GOLD);
     }
 
 }

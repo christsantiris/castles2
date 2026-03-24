@@ -30,7 +30,7 @@ TEST_CASE("point clearly outside province", "[map]") {
 TEST_CASE("click selects a province", "[map]") {
     World w;
     w.provinces.push_back(makeRect(0, 0, 0, 100, 100));
-    auto* selected = MapSystem::handleClick(w, 50, 50);
+    auto* selected = MapSystem::handleClick(w, 50, 110);
     REQUIRE(selected != nullptr);
     REQUIRE(selected->id == 0);
     REQUIRE(w.provinces[0].isSelected == true);
@@ -39,8 +39,8 @@ TEST_CASE("click selects a province", "[map]") {
 TEST_CASE("click same province deselects it", "[map]") {
     World w;
     w.provinces.push_back(makeRect(0, 0, 0, 100, 100));
-    MapSystem::handleClick(w, 50, 50);
-    auto* selected = MapSystem::handleClick(w, 50, 50);
+    MapSystem::handleClick(w, 50, 110);
+    auto* selected = MapSystem::handleClick(w, 50, 110);
     REQUIRE(selected == nullptr);
     REQUIRE(w.provinces[0].isSelected == false);
 }
@@ -49,8 +49,8 @@ TEST_CASE("clicking one province deselects others", "[map]") {
     World w;
     w.provinces.push_back(makeRect(0, 0,   0, 100, 100));
     w.provinces.push_back(makeRect(1, 200, 0, 100, 100));
-    MapSystem::handleClick(w, 50, 50);
-    MapSystem::handleClick(w, 250, 50);
+    MapSystem::handleClick(w, 50, 110);
+    MapSystem::handleClick(w, 250, 110);
     REQUIRE(w.provinces[0].isSelected == false);
     REQUIRE(w.provinces[1].isSelected == true);
 }
@@ -58,7 +58,7 @@ TEST_CASE("clicking one province deselects others", "[map]") {
 TEST_CASE("click empty area deselects all", "[map]") {
     World w;
     w.provinces.push_back(makeRect(0, 0, 0, 100, 100));
-    MapSystem::handleClick(w, 50, 50);
+    MapSystem::handleClick(w, 50, 110);
     MapSystem::handleClick(w, 500, 500);
     REQUIRE(w.provinces[0].isSelected == false);
 }
