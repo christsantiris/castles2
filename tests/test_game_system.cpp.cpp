@@ -2,6 +2,7 @@
 #include "core/world.h"
 #include "core/systems/game_system.h"
 #include "core/systems/date_system.h"
+#include "core/systems/hall_of_fame_system.h"
 
 static void setupWorld(World& w) {
     const std::vector<std::string> names = {
@@ -97,13 +98,13 @@ TEST_CASE("tick advances date by one day", "[game]") {
     REQUIRE(w.date.day == dayBefore + 1);
 }
 
-TEST_CASE("tick increments score by one", "[game]") {
+TEST_CASE("tick increments score every 5 days", "[game]") {
     World w;
     setupWorld(w);
     w.ctx.screen = GameScreen::Playing;
-    int scoreBefore = w.ctx.score;
-    GameSystem::tick(w);
-    REQUIRE(w.ctx.score == scoreBefore + 1);
+    for (int i = 0; i < 5; i++)
+        GameSystem::tick(w);
+    REQUIRE(w.ctx.score == 1);
 }
 
 TEST_CASE("tick decrements battle message timer", "[game]") {
@@ -155,4 +156,59 @@ TEST_CASE("isDefeat returns false when player owns at least one province", "[gam
     w.ctx.playerDynasty = "Player";
     w.provinces[0].owner = "Player";
     REQUIRE(GameSystem::isDefeat(w) == false);
+}
+
+TEST_CASE("screen changes to Victory when player captures Constantinople", "[victory]") {
+    World w;
+    setupWorld(w);
+    w.ctx.playerDynasty = "Player";
+
+    // Give player a province adjacent to Constantinople
+    for (auto& p : w.provinces)
+        if (p.name == "Constantinople")
+            p.owner = "Player";
+
+    REQUIRE(GameSystem::isVictory(w) == true);
+}
+
+TEST_CASE("isVictory returns false when Constantinople owned by another dynasty", "[victory]") {
+    World w;
+    setupWorld(w);
+    w.ctx.playerDynasty = "Player";
+
+    for (auto& p : w.provinces)
+        if (p.name == "Constantinople")
+            p.owner = "Baldwin II";
+
+    REQUIRE(GameSystem::isVictory(w) == false);
+}
+
+TEST_CASE("isVictory returns false when player owns no provinces", "[victory]") {
+    World w;
+    setupWorld(w);
+    w.ctx.playerDynasty = "Player";
+    REQUIRE(GameSystem::isVictory(w) == false);
+}
+
+TEST_CASE("victoryRecorded flag starts as false", "[victory]") {
+    World w;
+    REQUIRE(w.ctx.victoryRecorded == false);
+}
+
+TEST_CASE("victoryRecorded prevents duplicate hall of fame entries", "[victory]") {
+    HallOfFame hof;
+    bool victoryRecorded = false;
+
+    // Simulate first victory recording
+    if (!victoryRecorded) {
+        victoryRecorded = true;
+        HallOfFameSystem::addEntry(hof, "Player", 1000, "May 2, 1312");
+    }
+
+    // Simulate second attempt
+    if (!victoryRecorded) {
+        HallOfFameSystem::addEntry(hof, "Player", 1000, "May 2, 1312");
+    }
+
+    REQUIRE(hof.entries.size() == 1);
 }

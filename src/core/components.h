@@ -123,9 +123,11 @@ struct GameContext {
     GameScreen  screen             = GameScreen::Landing;
     std::string playerDynasty      = "";
     int         score              = 0;
+    int         dayCounter         = 0;
     int         activeTab          = -1;
     std::string battleMessage      = "";
     int         battleMessageTimer = 0;
+    bool        victoryRecorded    = false;
 };
 
 enum class BattlePhase { None, Preparing, Running, Paused, Resolved };
@@ -151,4 +153,14 @@ struct BattleState {
     float roundInterval = 1.0f;
     bool playerWon = false;
     std::string statusText = "";
+};
+
+struct HallOfFameEntry {
+    std::string dynasty;
+    int score;
+    std::string date;
+};
+
+struct HallOfFame {
+    std::vector<HallOfFameEntry> entries;
 };

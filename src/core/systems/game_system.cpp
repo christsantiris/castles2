@@ -20,7 +20,9 @@ namespace GameSystem {
 
     void tick(World& world) {
         DateSystem::advance(world.date);
-        world.ctx.score++;
+        world.ctx.dayCounter++;
+        if (world.ctx.dayCounter % 5 == 0)
+            world.ctx.score++;
         ResourceSystem::tick(world);
         CombatSystem::tickMarch(world);
         UnlockSystem::applyUnlocks(world);

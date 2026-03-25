@@ -147,6 +147,18 @@ namespace InputHandler {
                 handleLandingClick(x, y, world, landingState);
             } else if (world.ctx.screen == GameScreen::Playing) {
                 handlePlayingClick(x, y, world);
+            } else if (world.ctx.screen == GameScreen::Victory) {
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+                    int x = event.button.x;
+                    int y = event.button.y;
+                    int btnY = 80 + 640 - 70;
+                    if (x >= 540 && x <= 740 && y >= btnY && y <= btnY + 45) {
+                        world = World();
+                        MapSystem::load(world, "data/map.json");
+                        GameSystem::initArmies(world);
+                        world.ctx.screen = GameScreen::Landing;
+                    }
+                }
             }
         }
 

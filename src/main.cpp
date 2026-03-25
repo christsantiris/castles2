@@ -10,6 +10,9 @@
 #include "input/input_handler.h"
 #include "renderer/battle_renderer.h"
 #include "core/systems/combat_system.h"
+#include "renderer/victory_renderer.h"
+#include "core/systems/hall_of_fame_system.h"
+#include "core/systems/date_system.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -35,8 +38,9 @@ int main() {
     GameSystem::initArmies(world);
 
     LandingState landingState;
+    HallOfFame hof = HallOfFameSystem::load("data/hall_of_fame.json");
     Uint32 lastTick = SDL_GetTicks();
-    const Uint32 tickInterval = 2000;
+    const Uint32 tickInterval = 3750;
 
     SDL_Event event;
     bool running = true;
@@ -49,17 +53,25 @@ int main() {
         Uint32 now = SDL_GetTicks();
         float deltaTime = (now - lastTick) / 1000.0f;
 
-        if (world.ctx.screen == GameScreen::Playing) {
+        if (world.ctx.screen == GameScreen::Playing ||
+            world.ctx.screen == GameScreen::Victory) {
             CombatSystem::updateBattle(world, deltaTime);
 
             if (now - lastTick >= tickInterval) {
                 lastTick = now;
-                GameSystem::tick(world);
+                if (world.ctx.screen == GameScreen::Playing)
+                    GameSystem::tick(world);
 
-                // Auto close resolved battle after delay
                 if (world.battle.phase == BattlePhase::Resolved)
                     world.battle = BattleState{};
             }
+        }
+
+        if (world.ctx.screen == GameScreen::Victory && !world.ctx.victoryRecorded) {
+            world.ctx.victoryRecorded = true;
+            HallOfFameSystem::addEntry(hof, world.ctx.playerDynasty,
+                                       world.ctx.score, DateSystem::toString(world.date));
+            HallOfFameSystem::save(hof, "data/hall_of_fame.json");
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -72,6 +84,11 @@ int main() {
             PanelRenderer::render(renderer, font, world);
             TopBarRenderer::render(renderer, font, world);
             BattleRenderer::render(renderer, font, world);
+        } else if (world.ctx.screen == GameScreen::Victory) {
+            MapRenderer::render(renderer, font, world);
+            PanelRenderer::render(renderer, font, world);
+            TopBarRenderer::render(renderer, font, world);
+            VictoryRenderer::render(renderer, font, world, hof);
         }
 
         SDL_RenderPresent(renderer);
