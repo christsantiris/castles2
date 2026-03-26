@@ -3,6 +3,7 @@
 #include "resource_system.h"
 #include "unlock_system.h"
 #include "combat_system.h"
+#include "recruit_system.h"
 #include <algorithm>
 #include <random>
 
@@ -26,6 +27,7 @@ namespace GameSystem {
         ResourceSystem::tick(world);
         CombatSystem::tickMarch(world);
         UnlockSystem::applyUnlocks(world);
+        RecruitSystem::tick(world);
 
         if (world.ctx.battleMessageTimer > 0) {
             world.ctx.battleMessageTimer--;

@@ -33,10 +33,10 @@ struct ArmyComponent {
 enum class ResourceType { Food, Timber, Iron, Gold, None };
 
 struct ResourceStockComponent {
-    int food   = 0;
-    int timber = 0;
-    int iron   = 0;
-    int gold   = 0;
+    int food   = 3;
+    int timber = 3;
+    int iron   = 3;
+    int gold   = 3;
 };
 
 // ── Worker Pools ──────────────────────────────────────────────────────────────

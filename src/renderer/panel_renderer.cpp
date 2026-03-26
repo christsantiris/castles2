@@ -89,13 +89,21 @@ namespace PanelRenderer {
                 y += BAR_H + BAR_MARGIN;
                 continue;
             }
-            auto& task = world.combatTasks.slots[i];
-            std::string label = task.active ? "Attack in progress..." : "Military slot " + std::to_string(i + 1);
+            auto& combatTask = world.combatTasks.slots[i];
+            auto& recruitTask = world.recruitTasks.slots[i];
+            bool combatActive = combatTask.active;
+            bool recruitActive = recruitTask.active;
+            std::string label = combatActive ? "Marching..."
+                              : recruitActive ? "Recruiting..."
+                              : "Military slot " + std::to_string(i + 1);
+            float prog = combatActive ? combatTask.progress()
+                       : recruitActive ? recruitTask.progress() : 0.0f;
+            if (prog == 0.0f && (combatActive || recruitActive)) prog = 0.01f;
             SDL_Color border = {200, 0, 0, 255};
             drawRect(r, x, y, w, BAR_H, BAR_ARMY);
             drawBorder(r, x, y, w, BAR_H, border);
-            if (task.progress() > 0.0f)
-                drawRect(r, x + 2, y + BAR_H - 6, (int)((w - 4) * task.progress()), 4, border);
+            if (prog > 0.0f)
+                drawRect(r, x + 2, y + BAR_H - 6, (int)((w - 4) * prog), 4, border);
             drawText(r, font, label, x + 6, y + 8, WHITE);
             y += BAR_H + BAR_MARGIN;
         }

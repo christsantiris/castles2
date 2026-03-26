@@ -3,6 +3,7 @@
 #include "../core/systems/game_system.h"
 #include "../core/systems/resource_system.h"
 #include "../core/systems/combat_system.h"
+#include "../core/systems/recruit_system.h"
 
 static const int PANEL_X = 950;
 
@@ -103,16 +104,13 @@ namespace InputHandler {
                 int rowY = infoY + 10 + (i * rowH);
                 ResourceType res = (ResourceType)i;
 
-                // Minus button
                 if (x >= baseX + 60 && x <= baseX + 80 && y >= rowY + 24 && y <= rowY + 44)
                     if (world.pendingWorkers[i] > 1) world.pendingWorkers[i]--;
 
-                // Plus button
                 if (x >= baseX + 86 && x <= baseX + 106 && y >= rowY + 24 && y <= rowY + 44)
                     if (world.pendingWorkers[i] < world.workerPool.totalStockWorkers)
                         world.pendingWorkers[i]++;
 
-                // Collect / Cancel button
                 if (x >= baseX + 160 && x <= baseX + 240 && y >= rowY + 24 && y <= rowY + 44) {
                     bool isActive = false;
                     int activeSlot = -1;
@@ -129,6 +127,52 @@ namespace InputHandler {
                     else
                         ResourceSystem::startTask(world, res, world.pendingWorkers[i]);
                 }
+            }
+        }
+
+        // Army tab clicks
+        if (world.ctx.activeTab == 1 && x >= 950) {
+            int infoY = 60 + (36 + 4) * 6 + 4 + 40;
+            int baseX = PANEL_X + 8;
+            int y0 = infoY + 10 + 24;
+            int rowH = 64;
+
+            UnitType unitTypes[] = {UnitType::Infantry, UnitType::Archers, UnitType::Knights};
+
+            for (int i = 0; i < 3; i++) {
+                int rowY = y0 + (i * rowH);
+
+                if (x >= baseX + 160 && x <= baseX + 240 &&
+                    y >= rowY + 18 && y <= rowY + 40) {
+                    bool isActive = false;
+                    int activeSlot = -1;
+                    for (int s = 0; s < 2; s++) {
+                        if (world.recruitTasks.slots[s].active &&
+                            world.recruitTasks.slots[s].unitType == unitTypes[i]) {
+                            isActive = true;
+                            activeSlot = s;
+                            break;
+                        }
+                    }
+                    if (isActive)
+                        RecruitSystem::cancelRecruitment(world, activeSlot);
+                    else
+                        RecruitSystem::startRecruitment(world, unitTypes[i],
+                                                        world.pendingMilitaryWorkers);
+                }
+            }
+
+            int workerY = y0 + (3 * rowH) + 6;
+            if (x >= baseX + 120 && x <= baseX + 142 &&
+                y >= workerY && y <= workerY + 22) {
+                if (world.pendingMilitaryWorkers > 1)
+                    world.pendingMilitaryWorkers--;
+            }
+
+            if (x >= baseX + 148 && x <= baseX + 170 &&
+                y >= workerY && y <= workerY + 22) {
+                if (world.pendingMilitaryWorkers < world.workerPool.availableMilitaryWorkers)
+                    world.pendingMilitaryWorkers++;
             }
         }
     }

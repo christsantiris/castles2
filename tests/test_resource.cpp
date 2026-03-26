@@ -58,6 +58,7 @@ TEST_CASE("tick completes task and awards resource", "[resource]") {
     World w;
     w.ctx.playerDynasty = "Player";
     giveProvince(w, "Food");
+    w.resources.food = 0;
     ResourceSystem::startTask(w, ResourceType::Food, 1);
     int required = w.collectionTasks.slots[0].daysRequired;
     for (int i = 0; i < required; i++)
