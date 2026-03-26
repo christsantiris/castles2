@@ -3,6 +3,7 @@
 #include "core/systems/game_system.h"
 #include "core/systems/date_system.h"
 #include "core/systems/hall_of_fame_system.h"
+#include "renderer/landing_renderer.h"
 
 static void setupWorld(World& w) {
     const std::vector<std::string> names = {
@@ -211,4 +212,17 @@ TEST_CASE("victoryRecorded prevents duplicate hall of fame entries", "[victory]"
     }
 
     REQUIRE(hof.entries.size() == 1);
+}
+
+TEST_CASE("musicOn defaults to true in LandingState", "[music]") {
+    LandingState state;
+    REQUIRE(state.musicOn == true);
+}
+
+TEST_CASE("toggling musicOn changes state", "[music]") {
+    LandingState state;
+    state.musicOn = !state.musicOn;
+    REQUIRE(state.musicOn == false);
+    state.musicOn = !state.musicOn;
+    REQUIRE(state.musicOn == true);
 }
