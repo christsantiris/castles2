@@ -10,10 +10,17 @@ static const int PANEL_X = 950;
 
 namespace InputHandler {
 
-    static void handleLandingClick(int x, int y, World& world, LandingState& state, Mix_Music* music) {
+static void handleLandingClick(int x, int y, World& world, LandingState& state, Mix_Music* music) {
         // Cycle dynasty
         if (x >= 420 && x <= 860 && y >= 280 && y <= 320)
             state.dynastyIndex = (state.dynastyIndex + 1) % 5;
+
+        // Music toggle
+        if (x >= 420 && x <= 860 && y >= 380 && y <= 420) {
+            state.musicOn = !state.musicOn;
+            if (state.musicOn) Mix_ResumeMusic();
+            else Mix_PauseMusic();
+        }
 
         // PLAY button
         if (x >= 440 && x <= 520 && y >= 580 && y <= 620) {
