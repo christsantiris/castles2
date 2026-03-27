@@ -9,6 +9,8 @@ namespace AISystem {
         "Kantakouzenos", "Doukas", "Palaiologos", "Phokas", "Komnenos"
     };
 
+    static const int daysPerUnit[] = {40, 20, 13, 10, 8, 7, 6, 5};
+
     AIConfig easyConfig() {
         AIConfig c;
         c.tickInterval    = 15;
@@ -44,7 +46,6 @@ namespace AISystem {
             world.armies[dynasty].knights  = config.startKnights;
         }
 
-        // Baldwin II scales with difficulty
         world.armies["Baldwin II"].infantry = config.startInfantry + 1;
         world.armies["Baldwin II"].archers  = config.startArchers  + 2;
         world.armies["Baldwin II"].knights  = config.startKnights  + 1;
@@ -54,8 +55,14 @@ namespace AISystem {
         return world.isDefeated(dynasty);
     }
 
+    static bool alreadyMarching(const World& world, const std::string& dynasty) {
+        for (auto& march : world.aiMarches)
+            if (march.active && march.dynasty == dynasty)
+                return true;
+        return false;
+    }
+
     static int findTarget(const World& world, const std::string& dynasty) {
-        // Find an adjacent province to attack — neutral first, then player
         int neutralTarget = -1;
         int playerTarget  = -1;
 
@@ -77,28 +84,6 @@ namespace AISystem {
         return neutralTarget != -1 ? neutralTarget : playerTarget;
     }
 
-    static void resolveAIBattle(World& world, const std::string& dynasty, int targetId) {
-        auto* target = world.findProvince(targetId);
-        if (!target) return;
-
-        ArmyComponent& attacker = world.armies[dynasty];
-        ArmyComponent& defender = world.armies.count(target->owner)
-            ? world.armies[target->owner]
-            : world.armies["neutral"];
-
-        int atkRoll = CombatSystem::attackStrength(attacker) + (rand() % 10);
-        int defRoll = CombatSystem::defenseStrength(defender) + (rand() % 10);
-
-        if (atkRoll > defRoll) {
-            target->owner = dynasty;
-            // Attacker gains strength on victory
-            attacker.infantry = std::min(10, attacker.infantry + 1);
-        } else {
-            // Attacker loses strength on defeat
-            if (attacker.infantry > 1) attacker.infantry--;
-        }
-    }
-
     static void tickRecruit(World& world, const std::string& dynasty,
                             const AIConfig& config, AIState& state) {
         state.recruitCounter++;
@@ -110,18 +95,108 @@ namespace AISystem {
         if (army.archers  < 6) army.archers++;
     }
 
+    void tickMarches(World& world) {
+        for (auto& march : world.aiMarches) {
+            if (!march.active) continue;
+
+            march.daysAccumulated++;
+            if (march.daysAccumulated < march.daysRequired) continue;
+
+            // March complete
+            march.active = false;
+            auto* target = world.findProvince(march.targetProvinceId);
+            if (!target) continue;
+
+            if (target->owner == world.ctx.playerDynasty) {
+                // Trigger interactive battle — AI attacks player
+                // Swap attacker/defender by temporarily setting playerDynasty context
+                world.battle.phase            = BattlePhase::Preparing;
+                world.battle.targetProvinceId = march.targetProvinceId;
+                world.battle.targetProvinceName = target->name;
+                world.battle.defenderDynasty  = march.dynasty;
+
+                ArmyComponent& playerArmy = world.armies[world.ctx.playerDynasty];
+                ArmyComponent& aiArmy     = world.armies[march.dynasty];
+
+                // Player defends, AI attacks
+                int atkStr = CombatSystem::attackStrength(aiArmy);
+                int defStr = CombatSystem::defenseStrength(playerArmy);
+
+                world.battle.playerMaxHealth = defStr * 10;
+                world.battle.aiMaxHealth     = atkStr * 10;
+                world.battle.playerHealth    = world.battle.playerMaxHealth;
+                world.battle.aiHealth        = world.battle.aiMaxHealth;
+                world.battle.roundTimer      = 0.0f;
+                world.battle.transitionTimer = 0.0f;
+                world.battle.playerWon       = false;
+                world.battle.statusText      = "Defense: " + std::to_string(defStr) +
+                                               " vs Attack: " + std::to_string(atkStr);
+
+                // Spawn units — player on left, AI on right
+                std::vector<BattleUnit> playerUnits;
+                std::vector<BattleUnit> aiUnits;
+
+                float py = 200.0f;
+                for (int i = 0; i < playerArmy.infantry; i++) {
+                    BattleUnit u; u.x = 100.0f; u.y = py + i * 40.0f; u.type = 0; u.health = 10;
+                    playerUnits.push_back(u);
+                }
+                for (int i = 0; i < playerArmy.archers; i++) {
+                    BattleUnit u; u.x = 100.0f; u.y = py + (playerArmy.infantry + i) * 40.0f; u.type = 1; u.health = 10;
+                    playerUnits.push_back(u);
+                }
+                for (int i = 0; i < aiArmy.infantry; i++) {
+                    BattleUnit u; u.x = 750.0f; u.y = py + i * 40.0f; u.type = 0; u.health = 10;
+                    aiUnits.push_back(u);
+                }
+                for (int i = 0; i < aiArmy.archers; i++) {
+                    BattleUnit u; u.x = 750.0f; u.y = py + (aiArmy.infantry + i) * 40.0f; u.type = 1; u.health = 10;
+                    aiUnits.push_back(u);
+                }
+
+                world.battle.playerUnits = playerUnits;
+                world.battle.aiUnits     = aiUnits;
+
+                // Mark as scouted
+                world.scoutedProvinces.insert(march.targetProvinceId);
+
+            } else {
+                // Neutral province — resolve instantly
+                ArmyComponent& attacker = world.armies[march.dynasty];
+                ArmyComponent& defender = world.armies.count(target->owner)
+                    ? world.armies[target->owner]
+                    : world.armies["neutral"];
+
+                int atkRoll = CombatSystem::attackStrength(attacker) + (rand() % 10);
+                int defRoll = CombatSystem::defenseStrength(defender) + (rand() % 10);
+
+                if (atkRoll > defRoll) {
+                    target->owner = march.dynasty;
+                    attacker.infantry = std::min(10, attacker.infantry + 1);
+                } else {
+                    if (attacker.infantry > 1) attacker.infantry--;
+                }
+            }
+        }
+
+        // Remove inactive marches
+        world.aiMarches.erase(
+            std::remove_if(world.aiMarches.begin(), world.aiMarches.end(),
+                [](const AIMarchTask& m) { return !m.active; }),
+            world.aiMarches.end());
+    }
+
     void tick(World& world, const AIConfig& config) {
         for (auto& dynasty : AI_DYNASTIES) {
             if (isDefeated(world, dynasty)) continue;
             if (dynasty == world.ctx.playerDynasty) continue;
+            if (alreadyMarching(world, dynasty)) continue;
 
             auto& state = world.aiStates[dynasty];
             state.dayCounter++;
 
-            // Recruit periodically
             tickRecruit(world, dynasty, config, state);
 
-            // Attack on interval
             if (state.dayCounter % config.tickInterval != 0) continue;
 
             int targetId = findTarget(world, dynasty);
@@ -135,7 +210,17 @@ namespace AISystem {
                     playerTargeting = true;
             if (playerTargeting) continue;
 
-            resolveAIBattle(world, dynasty, targetId);
+            auto* target = world.findProvince(targetId);
+            bool isNeutral = target->owner == "neutral";
+
+            AIMarchTask march;
+            march.active           = true;
+            march.dynasty          = dynasty;
+            march.targetProvinceId = targetId;
+            march.daysAccumulated  = 0;
+            march.daysRequired     = daysPerUnit[std::min(config.militaryWorkers, 8) - 1]
+                                     * (isNeutral ? 1 : 2);
+            world.aiMarches.push_back(march);
         }
     }
 

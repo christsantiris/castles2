@@ -144,6 +144,8 @@ struct BattleUnit {
 struct BattleState {
     BattlePhase phase = BattlePhase::None;
     int targetProvinceId = -1;
+    std::string targetProvinceName = "";
+    std::string defenderDynasty    = "";
     std::vector<BattleUnit> playerUnits;
     std::vector<BattleUnit> aiUnits;
     int playerHealth = 100;
@@ -152,6 +154,7 @@ struct BattleState {
     int aiMaxHealth = 100;
     float roundTimer = 0.0f;
     float roundInterval = 1.0f;
+    float transitionTimer = 0.0f;
     bool playerWon = false;
     std::string statusText = "";
 };
@@ -186,4 +189,12 @@ struct MilitarySlot {
     std::string label    = "";
     float progress       = 0.0f;
     bool active          = false;
+};
+
+struct AIMarchTask {
+    bool        active          = false;
+    std::string dynasty         = "";
+    int         targetProvinceId = -1;
+    int         daysAccumulated = 0;
+    int         daysRequired    = 0;
 };

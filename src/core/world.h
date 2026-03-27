@@ -3,8 +3,11 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <set>
 
 struct World {
+    // Scouted provinces tracker
+    std::set<int> scoutedProvinces;
     // AI state tracker
     std::map<std::string, AIState> aiStates;
     // Ai config
@@ -34,6 +37,8 @@ struct World {
 
     // ── Interactive battles ───────────────────────────────────────────────────
     BattleState battle;
+    // ── AI battle progress  ───────────────────────────────────────────────────
+    std::vector<AIMarchTask> aiMarches;
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     ProvinceComponent* findProvince(int id);

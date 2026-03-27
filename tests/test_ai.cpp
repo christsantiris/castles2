@@ -65,13 +65,15 @@ TEST_CASE("AI captures neutral province with stronger army", "[ai]") {
     World w;
     setupWorld(w);
     w.armies["Kantakouzenos"] = {"Kantakouzenos", 10, 10, 10};
-    w.armies["neutral"]       = {"neutral", 0, 0, 0};
+    w.armies["neutral"]       = {"neutral",  0,  0,  0};
     AISystem::initAI(w, AISystem::easyConfig());
     w.aiStates["Kantakouzenos"].dayCounter = 15;
 
-    // Run enough ticks to trigger attack
-    for (int i = 0; i < 20; i++)
+    // Run enough ticks to trigger march and complete it
+    for (int i = 0; i < 60; i++) {
         AISystem::tick(w, AISystem::easyConfig());
+        AISystem::tickMarches(w);
+    }
 
     REQUIRE(w.provinces[1].owner == "Kantakouzenos");
 }
