@@ -5,6 +5,7 @@
 #include "../core/systems/combat_system.h"
 #include "../core/systems/recruit_system.h"
 #include <SDL2/SDL_mixer.h>
+#include "core/systems/ai_system.h"
 
 static const int PANEL_X = 950;
 
@@ -26,6 +27,7 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
         if (x >= 440 && x <= 520 && y >= 580 && y <= 620) {
             world.ctx.playerDynasty = state.selectedDynasty();
             GameSystem::assignStartingProvinces(world);
+            AISystem::initAI(world, world.aiConfig);
             world.ctx.screen = GameScreen::Playing;
         }
 

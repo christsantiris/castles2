@@ -6,9 +6,11 @@
 #include "recruit_system.h"
 #include <algorithm>
 #include <random>
+#include "ai_system.h"
 
 namespace GameSystem {
 
+    // init AI will overwrite these default values based on difficulty
     void initArmies(World& world) {
         world.armies["Kantakouzenos"] = {"Kantakouzenos", 4, 2, 0};
         world.armies["Doukas"]        = {"Doukas",        4, 2, 0};
@@ -28,6 +30,7 @@ namespace GameSystem {
         CombatSystem::tickMarch(world);
         UnlockSystem::applyUnlocks(world);
         RecruitSystem::tick(world);
+        AISystem::tick(world, world.aiConfig);
 
         if (world.ctx.battleMessageTimer > 0) {
             world.ctx.battleMessageTimer--;

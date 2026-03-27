@@ -262,15 +262,15 @@ namespace PanelRenderer {
                 }
             }
 
-            if (isActive) {
-                auto& task = world.recruitTasks.slots[activeSlot];
-                SDL_SetRenderDrawColor(r, 30, 15, 5, 255);
-                SDL_Rect pbg = {x, y + rowH - 8, w, 6};
-                SDL_RenderFillRect(r, &pbg);
-                SDL_SetRenderDrawColor(r, 0, 200, 0, 255);
-                SDL_Rect pfill = {x, y + rowH - 8, (int)(w * task.progress()), 6};
-                SDL_RenderFillRect(r, &pfill);
-            }
+            // if (isActive) {
+            //     auto& task = world.recruitTasks.slots[activeSlot];
+            //     SDL_SetRenderDrawColor(r, 30, 15, 5, 255);
+            //     SDL_Rect pbg = {x, y + rowH - 8, w, 6};
+            //     SDL_RenderFillRect(r, &pbg);
+            //     SDL_SetRenderDrawColor(r, 0, 200, 0, 255);
+            //     SDL_Rect pfill = {x, y + rowH - 8, (int)(w * task.progress()), 6};
+            //     SDL_RenderFillRect(r, &pfill);
+            // }
 
             bool canStart = !isActive && RecruitSystem::canAfford(world, unitTypes[i])
                             && world.workerPool.availableMilitaryWorkers >= 1;

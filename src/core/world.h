@@ -5,6 +5,11 @@
 #include <string>
 
 struct World {
+    // AI state tracker
+    std::map<std::string, AIState> aiStates;
+    // Ai config
+    AIConfig aiConfig;
+
     int pendingMilitaryWorkers = 1;
     // ── Map ───────────────────────────────────────────────────────────────────
     std::vector<ProvinceComponent> provinces;

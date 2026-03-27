@@ -14,6 +14,7 @@
 #include "renderer/victory_renderer.h"
 #include "core/systems/hall_of_fame_system.h"
 #include "core/systems/date_system.h"
+#include "core/systems/ai_system.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -42,6 +43,7 @@ int main() {
     World world;
     MapSystem::load(world, "data/map.json");
     GameSystem::initArmies(world);
+    // AISystem::initAI(world, world.aiConfig);
 
     LandingState landingState;
     HallOfFame hof = HallOfFameSystem::load("data/hall_of_fame.json");
