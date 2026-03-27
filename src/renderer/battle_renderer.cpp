@@ -70,6 +70,68 @@ namespace BattleRenderer {
         }
     }
 
+    static void drawFormation(SDL_Renderer* r, TTF_Font* font,
+                               const std::vector<BattleUnit>& units,
+                               SDL_Color color, bool isPlayer) {
+        // Count alive units per type
+        int counts[3] = {0, 0, 0};
+        float avgX = 0.0f;
+        int aliveCount = 0;
+        for (auto& u : units) {
+            if (!u.alive) continue;
+            counts[u.type]++;
+            avgX += u.x;
+            aliveCount++;
+        }
+        if (aliveCount == 0) return;
+        avgX /= aliveCount;
+
+        const char* typeNames[] = {"INF", "ARC", "KNT"};
+        int blockW = 80;
+        int blockH = 60;
+        int blockGap = 10;
+        int totalH = 0;
+        for (int i = 0; i < 3; i++)
+            if (counts[i] > 0) totalH += blockH + blockGap;
+
+        int startY = 350 - totalH / 2;
+        int x = (int)avgX - blockW / 2;
+
+        for (int i = 0; i < 3; i++) {
+            if (counts[i] == 0) continue;
+
+            // Block background
+            SDL_SetRenderDrawColor(r, color.r, color.g, color.b, 200);
+            SDL_Rect block = {x, startY, blockW, blockH};
+            SDL_RenderFillRect(r, &block);
+            SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+            SDL_RenderDrawRect(r, &block);
+
+            // Unit type label
+            SDL_Surface* ts = TTF_RenderText_Solid(font, typeNames[i], {255, 255, 255, 255});
+            if (ts) {
+                SDL_Texture* tt = SDL_CreateTextureFromSurface(r, ts);
+                SDL_Rect tr = {x + blockW/2 - ts->w/2, startY + 8, ts->w, ts->h};
+                SDL_RenderCopy(r, tt, nullptr, &tr);
+                SDL_FreeSurface(ts);
+                SDL_DestroyTexture(tt);
+            }
+
+            // Count
+            std::string countStr = std::to_string(counts[i]);
+            SDL_Surface* cs = TTF_RenderText_Solid(font, countStr.c_str(), {255, 215, 0, 255});
+            if (cs) {
+                SDL_Texture* ct = SDL_CreateTextureFromSurface(r, cs);
+                SDL_Rect cr = {x + blockW/2 - cs->w/2, startY + 30, cs->w, cs->h};
+                SDL_RenderCopy(r, ct, nullptr, &cr);
+                SDL_FreeSurface(cs);
+                SDL_DestroyTexture(ct);
+            }
+
+            startY += blockH + blockGap;
+        }
+    }
+
     static void drawHealthBar(SDL_Renderer* r, int x, int y, int w, int h,
                                int current, int max, SDL_Color color) {
         drawRect(r, x, y, w, h, HEALTH_BG);
@@ -109,10 +171,20 @@ namespace BattleRenderer {
         drawText(renderer, font, "Defender", 950 - hbW - 20, hbY - 20, WHITE);
 
         // Draw units
-        for (auto& u : battle.playerUnits)
-            drawUnit(renderer, u, PLAYER_COL);
-        for (auto& u : battle.aiUnits)
-            drawUnit(renderer, u, AI_COL);
+        int totalPlayerUnits = (int)battle.playerUnits.size();
+        int totalAIUnits     = (int)battle.aiUnits.size();
+
+        if (totalPlayerUnits <= 13 && totalAIUnits <= 13) {
+            // Individual unit sprites
+            for (auto& u : battle.playerUnits)
+                drawUnit(renderer, u, PLAYER_COL);
+            for (auto& u : battle.aiUnits)
+                drawUnit(renderer, u, AI_COL);
+        } else {
+            // Formation blocks
+            drawFormation(renderer, font, battle.playerUnits, PLAYER_COL, true);
+            drawFormation(renderer, font, battle.aiUnits,    AI_COL,    false);
+        }
 
         // Bottom bar
         int barY = 720;
