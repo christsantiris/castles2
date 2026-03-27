@@ -226,3 +226,105 @@ TEST_CASE("toggling musicOn changes state", "[music]") {
     state.musicOn = !state.musicOn;
     REQUIRE(state.musicOn == true);
 }
+
+TEST_CASE("combat task appears in first military slot", "[military_bars]") {
+    World w;
+    setupWorld(w);
+    w.combatTasks.slots[0].active = true;
+    w.combatTasks.slots[0].daysRequired = 40;
+    w.combatTasks.slots[0].daysAccumulated = 20;
+
+    MilitarySlot slots[2];
+    slots[0] = {"Military slot 1", 0.0f, false};
+    slots[1] = {"Military slot 2", 0.0f, false};
+
+    int slotIndex = 0;
+    for (int i = 0; i < 2 && slotIndex < 2; i++) {
+        if (w.combatTasks.slots[i].active) {
+            slots[slotIndex].label    = "Marching...";
+            slots[slotIndex].progress = w.combatTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+    }
+    for (int i = 0; i < 2 && slotIndex < 2; i++) {
+        if (w.recruitTasks.slots[i].active) {
+            slots[slotIndex].label    = "Recruiting...";
+            slots[slotIndex].progress = w.recruitTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+    }
+
+    REQUIRE(slots[0].active == true);
+    REQUIRE(slots[0].label == "Marching...");
+    REQUIRE(slots[1].active == false);
+}
+
+TEST_CASE("recruit task appears in first slot when no combat active", "[military_bars]") {
+    World w;
+    setupWorld(w);
+    w.recruitTasks.slots[0].active = true;
+    w.recruitTasks.slots[0].daysRequired = 40;
+    w.recruitTasks.slots[0].daysAccumulated = 10;
+
+    MilitarySlot slots[2];
+    slots[0] = {"Military slot 1", 0.0f, false};
+    slots[1] = {"Military slot 2", 0.0f, false};
+
+    int slotIndex = 0;
+    for (int i = 0; i < 2 && slotIndex < 2; i++)
+        if (w.combatTasks.slots[i].active) {
+            slots[slotIndex].label    = "Marching...";
+            slots[slotIndex].progress = w.combatTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+    for (int i = 0; i < 2 && slotIndex < 2; i++)
+        if (w.recruitTasks.slots[i].active) {
+            slots[slotIndex].label    = "Recruiting...";
+            slots[slotIndex].progress = w.recruitTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+
+    REQUIRE(slots[0].active == true);
+    REQUIRE(slots[0].label == "Recruiting...");
+    REQUIRE(slots[1].active == false);
+}
+
+TEST_CASE("combat and recruit tasks fill both slots", "[military_bars]") {
+    World w;
+    setupWorld(w);
+    w.combatTasks.slots[0].active = true;
+    w.combatTasks.slots[0].daysRequired = 40;
+    w.combatTasks.slots[0].daysAccumulated = 20;
+    w.recruitTasks.slots[0].active = true;
+    w.recruitTasks.slots[0].daysRequired = 40;
+    w.recruitTasks.slots[0].daysAccumulated = 10;
+
+    MilitarySlot slots[2];
+    slots[0] = {"Military slot 1", 0.0f, false};
+    slots[1] = {"Military slot 2", 0.0f, false};
+
+    int slotIndex = 0;
+    for (int i = 0; i < 2 && slotIndex < 2; i++)
+        if (w.combatTasks.slots[i].active) {
+            slots[slotIndex].label    = "Marching...";
+            slots[slotIndex].progress = w.combatTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+    for (int i = 0; i < 2 && slotIndex < 2; i++)
+        if (w.recruitTasks.slots[i].active) {
+            slots[slotIndex].label    = "Recruiting...";
+            slots[slotIndex].progress = w.recruitTasks.slots[i].progress();
+            slots[slotIndex].active   = true;
+            slotIndex++;
+        }
+
+    REQUIRE(slots[0].active == true);
+    REQUIRE(slots[0].label == "Marching...");
+    REQUIRE(slots[1].active == true);
+    REQUIRE(slots[1].label == "Recruiting...");
+}
