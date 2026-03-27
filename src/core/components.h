@@ -181,3 +181,9 @@ struct AIState {
     int dayCounter     = 0;
     int recruitCounter = 0;
 };
+
+struct MilitarySlot {
+    std::string label    = "";
+    float progress       = 0.0f;
+    bool active          = false;
+};

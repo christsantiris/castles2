@@ -84,27 +84,61 @@ namespace PanelRenderer {
             y += BAR_H + BAR_MARGIN;
         }
 
+        // for (int i = 0; i < 2; i++) {
+        //     if (i == 1 && !UnlockSystem::hasSecondMilitarySlot(world)) {
+        //         y += BAR_H + BAR_MARGIN;
+        //         continue;
+        //     }
+        //     auto& combatTask = world.combatTasks.slots[i];
+        //     auto& recruitTask = world.recruitTasks.slots[i];
+        //     bool combatActive = combatTask.active;
+        //     bool recruitActive = recruitTask.active;
+        //     std::string label = combatActive ? "Marching..."
+        //                       : recruitActive ? "Recruiting..."
+        //                       : "Military slot " + std::to_string(i + 1);
+        //     float prog = combatActive ? combatTask.progress()
+        //                : recruitActive ? recruitTask.progress() : 0.0f;
+        //     if (prog == 0.0f && (combatActive || recruitActive)) prog = 0.01f;
+        //     SDL_Color border = {200, 0, 0, 255};
+        //     drawRect(r, x, y, w, BAR_H, BAR_ARMY);
+        //     drawBorder(r, x, y, w, BAR_H, border);
+        //     if (prog > 0.0f)
+        //         drawRect(r, x + 2, y + BAR_H - 6, (int)((w - 4) * prog), 4, border);
+        //     drawText(r, font, label, x + 6, y + 8, WHITE);
+        //     y += BAR_H + BAR_MARGIN;
+        // }
+        MilitarySlot milSlots[2];
+        milSlots[0] = {"Military slot 1", 0.0f, false};
+        milSlots[1] = {"Military slot 2", 0.0f, false};
+                int slotIndex = 0;
+        for (int i = 0; i < 2 && slotIndex < 2; i++) {
+            if (world.combatTasks.slots[i].active) {
+                milSlots[slotIndex].label    = "Marching...";
+                milSlots[slotIndex].progress = std::max(world.combatTasks.slots[i].progress(), 0.01f);
+                milSlots[slotIndex].active   = true;
+                slotIndex++;
+            }
+        }
+        for (int i = 0; i < 2 && slotIndex < 2; i++) {
+            if (world.recruitTasks.slots[i].active) {
+                milSlots[slotIndex].label    = "Recruiting...";
+                milSlots[slotIndex].progress = std::max(world.recruitTasks.slots[i].progress(), 0.01f);
+                milSlots[slotIndex].active   = true;
+                slotIndex++;
+            }
+        }
+
         for (int i = 0; i < 2; i++) {
-            if (i == 1 && !UnlockSystem::hasSecondMilitarySlot(world)) {
+            if (i == 1 && !UnlockSystem::hasSecondMilitarySlot(world) && !milSlots[i].active) {
                 y += BAR_H + BAR_MARGIN;
                 continue;
             }
-            auto& combatTask = world.combatTasks.slots[i];
-            auto& recruitTask = world.recruitTasks.slots[i];
-            bool combatActive = combatTask.active;
-            bool recruitActive = recruitTask.active;
-            std::string label = combatActive ? "Marching..."
-                              : recruitActive ? "Recruiting..."
-                              : "Military slot " + std::to_string(i + 1);
-            float prog = combatActive ? combatTask.progress()
-                       : recruitActive ? recruitTask.progress() : 0.0f;
-            if (prog == 0.0f && (combatActive || recruitActive)) prog = 0.01f;
             SDL_Color border = {200, 0, 0, 255};
             drawRect(r, x, y, w, BAR_H, BAR_ARMY);
             drawBorder(r, x, y, w, BAR_H, border);
-            if (prog > 0.0f)
-                drawRect(r, x + 2, y + BAR_H - 6, (int)((w - 4) * prog), 4, border);
-            drawText(r, font, label, x + 6, y + 8, WHITE);
+            if (milSlots[i].active)
+                drawRect(r, x + 2, y + BAR_H - 6, (int)((w - 4) * milSlots[i].progress), 4, border);
+            drawText(r, font, milSlots[i].label, x + 6, y + 8, WHITE);
             y += BAR_H + BAR_MARGIN;
         }
 

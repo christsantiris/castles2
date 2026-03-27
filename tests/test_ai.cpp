@@ -50,14 +50,15 @@ TEST_CASE("initAI sets correct army sizes for easy mode", "[ai]") {
     REQUIRE(w.armies["Kantakouzenos"].archers  == config.startArchers);
 }
 
-TEST_CASE("initAI sets Baldwin II army correctly", "[ai]") {
+TEST_CASE("initAI sets Baldwin II army correctly on easy", "[ai]") {
     World w;
     setupWorld(w);
     w.armies["Baldwin II"] = {"Baldwin II", 0, 0, 0};
-    AISystem::initAI(w, AISystem::easyConfig());
-    REQUIRE(w.armies["Baldwin II"].infantry == 3);
-    REQUIRE(w.armies["Baldwin II"].archers  == 4);
-    REQUIRE(w.armies["Baldwin II"].knights  == 2);
+    AIConfig config = AISystem::easyConfig();
+    AISystem::initAI(w, config);
+    REQUIRE(w.armies["Baldwin II"].infantry == config.startInfantry + 1);
+    REQUIRE(w.armies["Baldwin II"].archers  == config.startArchers  + 2);
+    REQUIRE(w.armies["Baldwin II"].knights  == config.startKnights  + 1);
 }
 
 TEST_CASE("AI captures neutral province with stronger army", "[ai]") {
