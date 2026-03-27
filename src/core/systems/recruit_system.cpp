@@ -28,8 +28,8 @@ namespace RecruitSystem {
         // Check unit cap
         auto it = world.armies.find(world.ctx.playerDynasty);
         if (it != world.armies.end()) {
-            if (unit == UnitType::Infantry && it->second.infantry >= 10) return false;
-            if (unit == UnitType::Archers  && it->second.archers  >= 10) return false;
+            if (unit == UnitType::Infantry && it->second.infantry >= 15) return false;
+            if (unit == UnitType::Archers  && it->second.archers  >= 15) return false;
             if (unit == UnitType::Knights  && it->second.knights  >= 10) return false;
         }
 

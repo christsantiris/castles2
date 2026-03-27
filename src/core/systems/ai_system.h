@@ -22,4 +22,5 @@ namespace AISystem {
     AIConfig hardConfig();
     void initAI(World& world, const AIConfig& config);
     void tick(World& world, const AIConfig& config);
+    void tickMarches(World& world);
 }

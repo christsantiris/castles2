@@ -92,9 +92,23 @@ namespace MapRenderer {
 
         // Fill provinces
         for (auto& p : world.provinces) {
-            SDL_Color color = p.isSelected
-                ? SDL_Color{144, 238, 144, 255}
-                : SDL_Color{34, 139, 34, 255};
+            SDL_Color color;
+            if (p.isSelected) {
+                color = {144, 238, 144, 255};
+            } else if (p.owner == world.ctx.playerDynasty) {
+                color = {34, 139, 34, 255};
+            } else if (world.scoutedProvinces.count(p.id)) {
+                // Color by owner
+                if (p.owner == "Baldwin II")        color = {128,   0, 128, 255};
+                else if (p.owner == "Kantakouzenos") color = {180,  30,  30, 255};
+                else if (p.owner == "Doukas")        color = {180,   0, 180, 255};
+                else if (p.owner == "Palaiologos")   color = {200, 100,   0, 255};
+                else if (p.owner == "Phokas")        color = {139,  69,  19, 255};
+                else if (p.owner == "Komnenos")      color = {0,   139, 139, 255};
+                else                                 color = {34,  139,  34, 255};
+            } else {
+                color = {34, 139, 34, 255};
+            }
             fillPolygon(renderer, offsetPolygon(p.polygon), color);
         }
 

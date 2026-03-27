@@ -31,6 +31,7 @@ namespace GameSystem {
         UnlockSystem::applyUnlocks(world);
         RecruitSystem::tick(world);
         AISystem::tick(world, world.aiConfig);
+        AISystem::tickMarches(world);
 
         if (world.ctx.battleMessageTimer > 0) {
             world.ctx.battleMessageTimer--;

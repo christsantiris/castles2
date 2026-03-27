@@ -17,15 +17,13 @@ make run
 ## Roadmap
 - [ ] Updates to rectangular province UI (difficult)
 - [ ] Advanced combat system
-- [ ] Unlock Knights
 - [ ] Add diplomacy (bribe province, relationships to prevent attack on owned provinces)
 - [ ] Save/Load
 - [ ] Construct Castles (difficult)
 - [ ] Special Quests
 - [ ] Upkeep like paying and feeding troops
-- [ ] Recruit additional troops. Infantry costs iron. Archers cost timber.Knights cost 2x Iron
 - [ ] Spying
 - [ ] Easy, Medium and Hard mode
-- [ ] Random starting locations
 - [ ] Randomized Resources
-- [ ] Additional workers of each type at score thresholds
+
+![alt text](image.png)

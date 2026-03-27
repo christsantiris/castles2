@@ -195,10 +195,13 @@ namespace CombatSystem {
                 target->owner = world.ctx.playerDynasty;
                 world.ctx.score += 150;
                 world.ctx.battleMessage = "Victory! " + target->name + " conquered";
+                world.scoutedProvinces.insert(world.battle.targetProvinceId);
                 if (target->name == "Constantinople")
                     world.ctx.screen = GameScreen::Victory;
             } else {
                 world.ctx.battleMessage = "Defeated! " + target->name + " held";
+                // If this was an AI attack on player province, mark as scouted
+                world.scoutedProvinces.insert(world.battle.targetProvinceId);
             }
             world.ctx.battleMessageTimer = 5;
             world.battle.statusText = world.battle.playerWon ? "Victory!" : "Defeated!";
