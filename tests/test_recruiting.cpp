@@ -73,10 +73,10 @@ TEST_CASE("tick completes recruitment and adds unit to army", "[recruit]") {
     REQUIRE(w.workerPool.availableMilitaryWorkers == 4);
 }
 
-TEST_CASE("cannot recruit past unit cap of 10", "[recruit]") {
+TEST_CASE("cannot recruit past unit cap", "[recruit]") {
     World w;
     setupWorld(w);
-    w.armies["Player"].infantry = 10;
+    w.armies["Player"].infantry = 15;
     REQUIRE(RecruitSystem::startRecruitment(w, UnitType::Infantry, 1) == false);
 }
 

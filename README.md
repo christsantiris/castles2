@@ -17,13 +17,14 @@ make run
 ## Roadmap
 - [ ] Updates to rectangular province UI (difficult)
 - [ ] Advanced combat system
-- [ ] Add diplomacy (bribe province, relationships to prevent attack on owned provinces)
+- [ ] Add diplomacy (bribe province, scout province)
 - [ ] Save/Load
 - [ ] Construct Castles (difficult)
 - [ ] Special Quests
 - [ ] Upkeep like paying and feeding troops
-- [ ] Spying
 - [ ] Easy, Medium and Hard mode
 - [ ] Randomized Resources
+- [ ] Defeat view when player loses all provinces
+- [ ] Battle defeat — player and AI experience troop reductions after losing a battle
 
 ![alt text](image.png)
