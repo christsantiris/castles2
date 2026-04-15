@@ -8,3 +8,6 @@ run: build
 
 test: build
 	./build/castles3_tests
+
+clean:
+	rm -rf build

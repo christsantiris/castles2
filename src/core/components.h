@@ -94,6 +94,7 @@ struct RecruitTasksComponent {
 // ── Bribe Tasks ───────────────────────────────────────────────────────────────
 struct BribeTask : TaskBase {
     int targetProvinceId = -1;
+    int goldAmount = 5;
 };
 
 struct BribeTasksComponent {
