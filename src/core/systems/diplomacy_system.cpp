@@ -60,6 +60,67 @@ namespace DiplomacySystem {
         }
     }
 
+    bool canStartScout(const World& world, int targetProvinceId) {
+        auto* target = const_cast<World&>(world).findProvince(targetProvinceId);
+        if (!target) return false;
+        if (target->owner == world.ctx.playerDynasty) return false;
+        if (world.scoutedProvinces.count(targetProvinceId)) return false;
+        if (!CombatSystem::isAdjacent(world, targetProvinceId)) return false;
+
+        for (int i = 0; i < 2; i++) {
+            if (!world.scoutTasks.slots[i].active) return true;
+        }
+        return false;
+    }
+
+    bool startScout(World& world, int targetProvinceId, int workers) {
+        if (!canStartScout(world, targetProvinceId)) return false;
+        if (workers < 1) return false;
+        if (workers > world.workerPool.availableDiplomaticWorkers) return false;
+
+        int slot = -1;
+        for (int i = 0; i < 2; i++) {
+            if (!world.scoutTasks.slots[i].active) { slot = i; break; }
+        }
+
+        auto& task = world.scoutTasks.slots[slot];
+        task.active = true;
+        task.targetProvinceId = targetProvinceId;
+        task.workersAssigned = workers;
+        task.daysAccumulated = 0;
+        task.daysRequired = daysPerUnit[std::min(workers, 8) - 1];
+
+        world.workerPool.availableDiplomaticWorkers -= workers;
+        return true;
+    }
+
+    void cancelScout(World& world, int slot) {
+        auto& task = world.scoutTasks.slots[slot];
+        if (!task.active) return;
+        world.workerPool.availableDiplomaticWorkers += task.workersAssigned;
+        task = ScoutTask{};
+    }
+
+    static void tickScout(World& world) {
+        for (int i = 0; i < 2; i++) {
+            auto& task = world.scoutTasks.slots[i];
+            if (!task.active) continue;
+
+            task.daysAccumulated++;
+            if (task.daysAccumulated < task.daysRequired) continue;
+
+            auto* target = world.findProvince(task.targetProvinceId);
+            world.workerPool.availableDiplomaticWorkers += task.workersAssigned;
+            task = ScoutTask{};
+
+            if (!target) continue;
+
+            world.scoutedProvinces.insert(target->id);
+            world.ctx.battleMessage = target->name + " has been scouted";
+            world.ctx.battleMessageTimer = 5;
+        }
+    }
+
     void tickBribe(World& world) {
         for (int i = 0; i < 2; i++) {
             auto& task = world.bribeTasks.slots[i];
@@ -89,6 +150,11 @@ namespace DiplomacySystem {
             }
             world.ctx.battleMessageTimer = 5;
         }
+    }
+
+    void tick(World& world) {
+        tickScout(world);
+        tickBribe(world);
     }
 
 }
