@@ -6,6 +6,7 @@
 #include "../core/systems/recruit_system.h"
 #include <SDL2/SDL_mixer.h>
 #include "core/systems/ai_system.h"
+#include "core/systems/diplomacy_system.h"
 
 static const int PANEL_X = 950;
 
@@ -54,24 +55,74 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
 
             // Military worker minus button
             if (x >= PANEL_X + 170 && x <= PANEL_X + 190 &&
-                y >= infoY + 103 && y <= infoY + 123) {
+                y >= infoY + 133 && y <= infoY + 153) {
                 if (world.pendingMilitaryWorkers > 1)
                     world.pendingMilitaryWorkers--;
             }
 
             // Military worker plus button
             if (x >= PANEL_X + 196 && x <= PANEL_X + 216 &&
-                y >= infoY + 103 && y <= infoY + 123) {
+                y >= infoY + 133 && y <= infoY + 153) {
                 if (world.pendingMilitaryWorkers < world.workerPool.availableMilitaryWorkers)
                     world.pendingMilitaryWorkers++;
             }
 
             // Attack button
             if (x >= PANEL_X + 10 && x <= PANEL_X + 210 &&
-                y >= infoY + 130 && y <= infoY + 166) {
+                y >= infoY + 160 && y <= infoY + 196) {
                 for (auto& p : world.provinces) {
                     if (!p.isSelected) continue;
                     CombatSystem::startMarch(world, p.id, world.pendingMilitaryWorkers);
+                    break;
+                }
+            }
+
+            // Diplo worker minus
+            if (x >= PANEL_X + 170 && x <= PANEL_X + 190 &&
+                y >= infoY + 206 && y <= infoY + 226) {
+                if (world.pendingDiplomaticWorkers > 1)
+                    world.pendingDiplomaticWorkers--;
+            }
+
+            // Diplo worker plus
+            if (x >= PANEL_X + 196 && x <= PANEL_X + 216 &&
+                y >= infoY + 206 && y <= infoY + 226) {
+                if (world.pendingDiplomaticWorkers < world.workerPool.availableDiplomaticWorkers)
+                    world.pendingDiplomaticWorkers++;
+            }
+
+            // Scout button
+            if (x >= PANEL_X + 10 && x <= PANEL_X + 210 &&
+                y >= infoY + 233 && y <= infoY + 269) {
+                for (auto& p : world.provinces) {
+                    if (!p.isSelected) continue;
+                    DiplomacySystem::startScout(world, p.id, world.pendingDiplomaticWorkers);
+                    break;
+                }
+            }
+
+            // Gold minus
+            if (x >= PANEL_X + 170 && x <= PANEL_X + 190 &&
+                y >= infoY + 276 && y <= infoY + 296) {
+                if (world.pendingBribeGold > 1)
+                    world.pendingBribeGold--;
+            }
+
+            // Gold plus
+            if (x >= PANEL_X + 196 && x <= PANEL_X + 216 &&
+                y >= infoY + 276 && y <= infoY + 296) {
+                if (world.pendingBribeGold < world.resources.gold)
+                    world.pendingBribeGold++;
+            }
+
+            // Bribe button
+            if (x >= PANEL_X + 10 && x <= PANEL_X + 210 &&
+                y >= infoY + 305 && y <= infoY + 341) {
+                for (auto& p : world.provinces) {
+                    if (!p.isSelected) continue;
+                    DiplomacySystem::startBribe(world, p.id,
+                                               world.pendingDiplomaticWorkers,
+                                               world.pendingBribeGold);
                     break;
                 }
             }

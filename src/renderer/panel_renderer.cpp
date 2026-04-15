@@ -347,11 +347,20 @@ namespace PanelRenderer {
 
         if (selected) {
             drawText(r, font, selected->name, PANEL_X + 10, infoY + 15, GOLD);
-            if (selected->isRevealed) {
+            bool isOwned = selected->owner == world.ctx.playerDynasty;
+            bool isScouted = world.scoutedProvinces.count(selected->id) > 0;
+            if (isOwned || isScouted) {
                 drawText(r, font, "Owner: " + selected->owner,
                         PANEL_X + 10, infoY + 45, WHITE);
                 drawText(r, font, "Resource: " + selected->resource,
                         PANEL_X + 10, infoY + 75, WHITE);
+                auto it = world.armies.find(selected->owner);
+                if (it != world.armies.end()) {
+                    std::string armyStr = "Army: INF:" + std::to_string(it->second.infantry) +
+                                         " ARC:" + std::to_string(it->second.archers) +
+                                         " KNT:" + std::to_string(it->second.knights);
+                    drawText(r, font, armyStr, PANEL_X + 10, infoY + 105, WHITE);
+                }
             }
 
             bool isEnemy = selected->owner != world.ctx.playerDynasty;
@@ -366,21 +375,79 @@ namespace PanelRenderer {
 
                 if (!marching) {
                     std::string wLabel = "Military: " + std::to_string(world.pendingMilitaryWorkers);
-                    drawText(r, font, wLabel, PANEL_X + 10, infoY + 105, WHITE);
+                    drawText(r, font, wLabel, PANEL_X + 10, infoY + 135, WHITE);
 
-                    drawRect(r, PANEL_X + 170, infoY + 103, 20, 20, {120, 0, 0, 255});
-                    drawBorder(r, PANEL_X + 170, infoY + 103, 20, 20, GOLD);
-                    drawTextCentered(r, font, "-", PANEL_X + 170, infoY + 105, 20, WHITE);
+                    drawRect(r, PANEL_X + 170, infoY + 133, 20, 20, {120, 0, 0, 255});
+                    drawBorder(r, PANEL_X + 170, infoY + 133, 20, 20, GOLD);
+                    drawTextCentered(r, font, "-", PANEL_X + 170, infoY + 135, 20, WHITE);
 
-                    drawRect(r, PANEL_X + 196, infoY + 103, 20, 20, {0, 120, 0, 255});
-                    drawBorder(r, PANEL_X + 196, infoY + 103, 20, 20, GOLD);
-                    drawTextCentered(r, font, "+", PANEL_X + 196, infoY + 105, 20, WHITE);
+                    drawRect(r, PANEL_X + 196, infoY + 133, 20, 20, {0, 120, 0, 255});
+                    drawBorder(r, PANEL_X + 196, infoY + 133, 20, 20, GOLD);
+                    drawTextCentered(r, font, "+", PANEL_X + 196, infoY + 135, 20, WHITE);
 
-                    drawRect(r, PANEL_X + 10, infoY + 130, 200, 36, {0, 100, 0, 255});
-                    drawBorder(r, PANEL_X + 10, infoY + 130, 200, 36, GOLD);
-                    drawTextCentered(r, font, "ATTACK", PANEL_X + 10, infoY + 140, 200, GOLD);
+                    drawRect(r, PANEL_X + 10, infoY + 160, 200, 36, {0, 100, 0, 255});
+                    drawBorder(r, PANEL_X + 10, infoY + 160, 200, 36, GOLD);
+                    drawTextCentered(r, font, "ATTACK", PANEL_X + 10, infoY + 170, 200, GOLD);
                 } else {
-                    drawText(r, font, "Marching...", PANEL_X + 10, infoY + 110, GOLD);
+                    drawText(r, font, "Marching...", PANEL_X + 10, infoY + 140, GOLD);
+                }
+
+                // Diplomatic worker selector (shared by scout and bribe)
+                std::string dipLabel = "Diplo: " + std::to_string(world.pendingDiplomaticWorkers);
+                drawText(r, font, dipLabel, PANEL_X + 10, infoY + 208, WHITE);
+
+                drawRect(r, PANEL_X + 170, infoY + 206, 20, 20, {120, 0, 0, 255});
+                drawBorder(r, PANEL_X + 170, infoY + 206, 20, 20, GOLD);
+                drawTextCentered(r, font, "-", PANEL_X + 170, infoY + 208, 20, WHITE);
+
+                drawRect(r, PANEL_X + 196, infoY + 206, 20, 20, {0, 120, 0, 255});
+                drawBorder(r, PANEL_X + 196, infoY + 206, 20, 20, GOLD);
+                drawTextCentered(r, font, "+", PANEL_X + 196, infoY + 208, 20, WHITE);
+
+                // Scout button
+                bool scouting = false;
+                for (int s = 0; s < 2; s++)
+                    if (world.scoutTasks.slots[s].active &&
+                        world.scoutTasks.slots[s].targetProvinceId == selected->id)
+                        scouting = true;
+
+                if (scouting) {
+                    drawText(r, font, "Scouting...", PANEL_X + 10, infoY + 238, {100, 150, 255, 255});
+                } else if (!isScouted) {
+                    drawRect(r, PANEL_X + 10, infoY + 233, 200, 36, {0, 0, 120, 255});
+                    drawBorder(r, PANEL_X + 10, infoY + 233, 200, 36, GOLD);
+                    drawTextCentered(r, font, "SCOUT", PANEL_X + 10, infoY + 243, 200, GOLD);
+                }
+
+                // Bribe section
+                bool bribing = false;
+                for (int s = 0; s < 2; s++)
+                    if (world.bribeTasks.slots[s].active &&
+                        world.bribeTasks.slots[s].targetProvinceId == selected->id)
+                        bribing = true;
+
+                if (bribing) {
+                    drawText(r, font, "Bribing...", PANEL_X + 10, infoY + 283, {100, 150, 255, 255});
+                } else if (selected->name != "Constantinople") {
+                    std::string goldLabel = "Gold: " + std::to_string(world.pendingBribeGold);
+                    drawText(r, font, goldLabel, PANEL_X + 10, infoY + 278, WHITE);
+
+                    drawRect(r, PANEL_X + 170, infoY + 276, 20, 20, {120, 0, 0, 255});
+                    drawBorder(r, PANEL_X + 170, infoY + 276, 20, 20, GOLD);
+                    drawTextCentered(r, font, "-", PANEL_X + 170, infoY + 278, 20, WHITE);
+
+                    drawRect(r, PANEL_X + 196, infoY + 276, 20, 20, {0, 120, 0, 255});
+                    drawBorder(r, PANEL_X + 196, infoY + 276, 20, 20, GOLD);
+                    drawTextCentered(r, font, "+", PANEL_X + 196, infoY + 278, 20, WHITE);
+
+                    bool canBribe = world.resources.gold >= world.pendingBribeGold
+                                    && world.workerPool.availableDiplomaticWorkers >= 1;
+                    SDL_Color bribeBtn = canBribe ? SDL_Color{0, 0, 120, 255}
+                                                  : SDL_Color{40, 40, 40, 255};
+                    drawRect(r, PANEL_X + 10, infoY + 305, 200, 36, bribeBtn);
+                    drawBorder(r, PANEL_X + 10, infoY + 305, 200, 36, GOLD);
+                    drawTextCentered(r, font, "BRIBE", PANEL_X + 10, infoY + 315, 200,
+                                     canBribe ? GOLD : SDL_Color{80, 80, 80, 255});
                 }
             }
         } else if (world.ctx.activeTab == 0) {

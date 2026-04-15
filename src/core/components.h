@@ -45,8 +45,8 @@ struct WorkerPoolComponent {
     int availableStockWorkers      = 4;
     int totalMilitaryWorkers       = 4;
     int availableMilitaryWorkers   = 4;
-    int totalDiplomaticWorkers     = 2;
-    int availableDiplomaticWorkers = 2;
+    int totalDiplomaticWorkers     = 4;
+    int availableDiplomaticWorkers = 4;
 };
 
 // ── Task Base ─────────────────────────────────────────────────────────────────
@@ -94,6 +94,7 @@ struct RecruitTasksComponent {
 // ── Bribe Tasks ───────────────────────────────────────────────────────────────
 struct BribeTask : TaskBase {
     int targetProvinceId = -1;
+    int goldAmount = 5;
 };
 
 struct BribeTasksComponent {

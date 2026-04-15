@@ -15,9 +15,13 @@ namespace MapSystem {
         for (auto& p : data["provinces"]) {
             ProvinceComponent province;
             province.id       = p["id"];
-            province.name     = p["name"];
             province.owner    = p["owner"];
             province.resource = p["resource"];
+#ifdef DEBUG
+            province.name = std::string(p["name"]) + " " + std::to_string((int)p["id"]);
+#else
+            province.name     = p["name"];
+#endif
 
             for (auto& point : p["polygon"]) {
                 Point pt;

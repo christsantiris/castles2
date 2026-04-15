@@ -3,14 +3,14 @@
 ## 1. Always use braces on if statements
 
 Prefer:
-```c
+```cpp
 if (!map_is_walkable(&g->map, ex, ey)) {
     continue;
 }
 ```
 
 Never:
-```c
+```cpp
 if (!map_is_walkable(&g->map, ex, ey)) continue;
 ```
 
@@ -21,14 +21,14 @@ This applies to all control flow: `if`, `else`, `for`, `while`.
 ## 2. Single space around operators — no alignment padding
 
 Prefer:
-```c
+```cpp
 int a = 5;
 int bc = 10;
 int def = 15;
 ```
 
 Never:
-```c
+```cpp
 int a   = 5;
 int bc  = 10;
 int def = 15;
@@ -41,12 +41,12 @@ This applies to variable declarations, struct field assignments, and all `=` usa
 ## 3. Function signatures on one line
 
 Prefer:
-```c
+```cpp
 static void handle_slot_result(SlotResult result, int slot, int slot_is_save) {
 ```
 
 Never:
-```c
+```cpp
 static void handle_slot_result(SlotResult result, int slot,
     int slot_is_save) {
 ```
@@ -83,11 +83,11 @@ When instructing where to add or modify code, always specify:
 Prefer:
 
 > In `src/core/systems/ai_system.cpp` in `tickMarches` replace:
-> ```c
+> ```cpp
 > world.battle.playerMaxHealth = defStr * 10;
 > ```
 > with:
-> ```c
+> ```cpp
 > world.battle.playerMaxHealth = defStr * 5;
 > ```
 

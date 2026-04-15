@@ -14,6 +14,8 @@ struct World {
     AIConfig aiConfig;
 
     int pendingMilitaryWorkers = 1;
+    int pendingDiplomaticWorkers = 1;
+    int pendingBribeGold = 5;
     // ── Map ───────────────────────────────────────────────────────────────────
     std::vector<ProvinceComponent> provinces;
 

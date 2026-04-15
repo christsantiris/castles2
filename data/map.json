@@ -2,7 +2,7 @@
     "provinces": [
         {
             "id": 0,
-            "name": "Constantinople 0",
+            "name": "Constantinople",
             "owner": "Baldwin II",
             "resource": "Gold",
             "neighbors": [
@@ -44,7 +44,7 @@
         },
         {
             "id": 1,
-            "name": "Macedonia 1",
+            "name": "Macedonia",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -90,7 +90,7 @@
         },
         {
             "id": 2,
-            "name": "Bulgaria 2",
+            "name": "Bulgaria",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [
@@ -143,7 +143,7 @@
         },
         {
             "id": 3,
-            "name": "Epirus 3",
+            "name": "Epirus",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [
@@ -180,7 +180,7 @@
         },
         {
             "id": 4,
-            "name": "Thrace 4",
+            "name": "Thrace",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -222,7 +222,7 @@
         },
         {
             "id": 5,
-            "name": "Pontus 5",
+            "name": "Pontus",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -262,7 +262,7 @@
         },
         {
             "id": 6,
-            "name": "Galatia 6",
+            "name": "Galatia",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -303,7 +303,7 @@
         },
         {
             "id": 7,
-            "name": "Anatolia 7",
+            "name": "Anatolia",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -359,7 +359,7 @@
         },
         {
             "id": 8,
-            "name": "Cappadocia 8",
+            "name": "Cappadocia",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -406,7 +406,7 @@
         },
         {
             "id": 9,
-            "name": "Achaia 9",
+            "name": "Achaia",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -452,7 +452,7 @@
         },
         {
             "id": 10,
-            "name": "Thessaly 10",
+            "name": "Thessaly",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [
@@ -507,7 +507,7 @@
         },
         {
             "id": 11,
-            "name": "Cilicia 11",
+            "name": "Cilicia",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -549,7 +549,7 @@
         },
         {
             "id": 12,
-            "name": "Chios 12",
+            "name": "Chios",
             "owner": "neutral",
             "resource": "Gold",
             "neighbors": [
@@ -583,7 +583,7 @@
         },
         {
             "id": 13,
-            "name": "Cyprus 13",
+            "name": "Cyprus",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [
@@ -620,7 +620,7 @@
         },
         {
             "id": 14,
-            "name": "Syria 14",
+            "name": "Syria",
             "owner": "neutral",
             "resource": "Gold",
             "neighbors": [
@@ -659,7 +659,7 @@
         },
         {
             "id": 15,
-            "name": "Judaea 15",
+            "name": "Judaea",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -698,7 +698,7 @@
         },
         {
             "id": 16,
-            "name": "Morea 16",
+            "name": "Morea",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -741,7 +741,7 @@
         },
         {
             "id": 17,
-            "name": "Crete 17",
+            "name": "Crete",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -778,7 +778,7 @@
         },
         {
             "id": 18,
-            "name": "Sicilia 18",
+            "name": "Sicilia",
             "owner": "neutral",
             "resource": "Timber",
             "neighbors": [
@@ -814,7 +814,7 @@
         },
         {
             "id": 19,
-            "name": "Arabia 19",
+            "name": "Arabia",
             "owner": "neutral",
             "resource": "Iron",
             "neighbors": [
@@ -851,7 +851,7 @@
         },
         {
             "id": 20,
-            "name": "Egypt 20",
+            "name": "Egypt",
             "owner": "neutral",
             "resource": "Gold",
             "neighbors": [
@@ -897,7 +897,7 @@
         },
         {
             "id": 21,
-            "name": "Africa 21",
+            "name": "Africa",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -938,7 +938,7 @@
         },
         {
             "id": 22,
-            "name": "Calabria 22",
+            "name": "Calabria",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
@@ -975,7 +975,7 @@
         },
         {
             "id": 23,
-            "name": "Mesopotamia 23",
+            "name": "Mesopotamia",
             "owner": "neutral",
             "resource": "Food",
             "neighbors": [
