@@ -26,5 +26,7 @@ make run
 - [ ] Randomized Resources
 - [ ] Defeat view when player loses all provinces
 - [ ] Battle defeat — player and AI experience troop reductions after losing a battle
+      
+<img width="2544" height="1644" alt="image" src="https://github.com/user-attachments/assets/fb244b2c-a6bd-4373-b3ba-8efdb8904e17" />
 
 ![alt text](image.png)
