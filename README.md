@@ -15,7 +15,6 @@ make run
 - Background music with toggle
 
 ## Roadmap
-- [ ] Updates to rectangular province UI (difficult)
 - [ ] Advanced combat system
 - [ ] Add diplomacy (bribe province, scout province)
 - [ ] Save/Load
