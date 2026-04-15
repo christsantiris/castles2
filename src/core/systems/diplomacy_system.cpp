@@ -5,7 +5,7 @@
 
 namespace DiplomacySystem {
 
-    static const int daysPerUnit[] = {40, 20, 13, 10, 8, 7, 6, 5};
+    static const int daysPerUnit[] = {20, 10, 7, 5, 4, 3, 3, 2};
 
     bool canStartBribe(const World& world, int targetProvinceId) {
         auto* target = const_cast<World&>(world).findProvince(targetProvinceId);
