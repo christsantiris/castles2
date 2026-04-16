@@ -216,8 +216,15 @@ namespace CombatSystem {
                 if (target->name == "Constantinople")
                     world.ctx.screen = GameScreen::Victory;
             } else {
-                world.ctx.battleMessage = "Defeated! " + target->name + " held";
-                // If this was an AI attack on player province, mark as scouted
+                if (!world.battle.defenderDynasty.empty()) {
+                    target->owner = world.battle.defenderDynasty;
+                    world.ctx.battleMessage = "Defeated! " + target->name + " lost!";
+                    if (world.isDefeated(world.ctx.playerDynasty)) {
+                        world.ctx.screen = GameScreen::Defeat;
+                    }
+                } else {
+                    world.ctx.battleMessage = "Defeated! " + target->name + " held";
+                }
                 world.scoutedProvinces.insert(world.battle.targetProvinceId);
             }
             world.ctx.battleMessageTimer = 5;

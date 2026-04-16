@@ -316,6 +316,18 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
                         world.ctx.screen = GameScreen::Landing;
                     }
                 }
+            } else if (world.ctx.screen == GameScreen::Defeat) {
+                if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+                    int x = event.button.x;
+                    int y = event.button.y;
+                    int btnY = 80 + 640 - 70;
+                    if (x >= 540 && x <= 740 && y >= btnY && y <= btnY + 45) {
+                        world = World();
+                        MapSystem::load(world, "data/map.json");
+                        GameSystem::initArmies(world);
+                        world.ctx.screen = GameScreen::Landing;
+                    }
+                }
             }
         }
 

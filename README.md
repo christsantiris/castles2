@@ -19,8 +19,6 @@ make run
 - [ ] Special Quests
 - [ ] Upkeep (paying and feeding troops)
 - [ ] Easy and Hard mode
-- [ ] Defeat view when player loses all provinces
-- [ ] Battle defeat — player and AI experience troop reductions after losing a battle
 - [ ] Construct Castles (difficult)
 - [ ] Advanced combat system (difficult)
       
