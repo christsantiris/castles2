@@ -133,7 +133,10 @@ struct GameContext {
     std::string battleMessage      = "";
     int         battleMessageTimer = 0;
     bool        victoryRecorded    = false;
-    bool shouldQuit = false;
+    bool        shouldQuit         = false;
+    int         upkeepInterval     = 90;
+    int         upkeepCounter      = 0;
+    bool        upkeepDue          = false;
 };
 
 enum class BattlePhase { None, Preparing, Running, Paused, Resolved };

@@ -8,6 +8,7 @@
 #include <random>
 #include "ai_system.h"
 #include "diplomacy_system.h"
+#include "upkeep_system.h"
 
 namespace GameSystem {
 
@@ -34,6 +35,7 @@ namespace GameSystem {
         AISystem::tick(world, world.aiConfig);
         AISystem::tickMarches(world);
         DiplomacySystem::tick(world);
+        UpkeepSystem::tick(world);
 
         if (world.ctx.battleMessageTimer > 0) {
             world.ctx.battleMessageTimer--;

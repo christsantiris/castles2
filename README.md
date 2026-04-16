@@ -16,9 +16,10 @@ make run
 
 ## Roadmap
 - [ ] Save/Load
-- [ ] Special Quests
-- [ ] Upkeep (paying and feeding troops)
+- [ ] Attacking requires food to feed army
 - [ ] Easy and Hard mode
+- [ ] Trade resources through diplomacy tab
+- [ ] Special Quests
 - [ ] Construct Castles (difficult)
 - [ ] Advanced combat system (difficult)
       
