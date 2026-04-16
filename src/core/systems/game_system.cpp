@@ -84,4 +84,25 @@ namespace GameSystem {
         for (int i = 0; i < (int)dynasties.size(); i++)
             world.provinces[eligible[i]].owner = dynasties[i];
     }
+
+    void randomizeResources(World& world) {
+        std::vector<std::string> pool;
+        std::vector<int> indices;
+
+        for (int i = 0; i < (int)world.provinces.size(); i++) {
+            if (world.provinces[i].name.find("Constantinople") != std::string::npos) {
+                continue;
+            }
+            pool.push_back(world.provinces[i].resource);
+            indices.push_back(i);
+        }
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(pool.begin(), pool.end(), g);
+
+        for (int i = 0; i < (int)indices.size(); i++) {
+            world.provinces[indices[i]].resource = pool[i];
+        }
+    }
 }

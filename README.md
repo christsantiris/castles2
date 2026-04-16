@@ -19,11 +19,11 @@ make run
 - [ ] Save/Load
 - [ ] Construct Castles (difficult)
 - [ ] Special Quests
-- [ ] Upkeep like paying and feeding troops
-- [ ] Easy, Medium and Hard mode
-- [ ] Randomized Resources
+- [ ] Upkeep (paying and feeding troops)
+- [ ] Easy and Hard mode
 - [ ] Defeat view when player loses all provinces
 - [ ] Battle defeat — player and AI experience troop reductions after losing a battle
+- [ ] Game clock stop during simulated battle
       
 <img width="2544" height="1644" alt="image" src="https://github.com/user-attachments/assets/fb244b2c-a6bd-4373-b3ba-8efdb8904e17" />
 

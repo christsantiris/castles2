@@ -24,10 +24,18 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
             else Mix_PauseMusic();
         }
 
+        // Resources toggle
+        if (x >= 420 && x <= 860 && y >= 480 && y <= 520) {
+            state.randomResources = !state.randomResources;
+        }
+
         // PLAY button
         if (x >= 440 && x <= 520 && y >= 580 && y <= 620) {
             world.ctx.playerDynasty = state.selectedDynasty();
             GameSystem::assignStartingProvinces(world);
+            if (state.randomResources) {
+                GameSystem::randomizeResources(world);
+            }
             AISystem::initAI(world, world.aiConfig);
             world.ctx.screen = GameScreen::Playing;
         }
