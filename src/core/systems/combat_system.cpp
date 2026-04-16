@@ -200,10 +200,9 @@ namespace CombatSystem {
 
             if (world.battle.playerWon) {
                 std::string defenderOwner = target->owner;
-                ArmyComponent& loser = world.armies.count(defenderOwner)
-                    ? world.armies[defenderOwner]
-                    : world.armies["neutral"];
-                applyLosses(loser);
+                if (defenderOwner != "neutral" && world.armies.count(defenderOwner)) {
+                    applyLosses(world.armies[defenderOwner]);
+                }
             } else {
                 applyLosses(world.armies[world.ctx.playerDynasty]);
             }
