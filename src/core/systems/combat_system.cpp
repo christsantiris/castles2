@@ -191,6 +191,23 @@ namespace CombatSystem {
         if (world.battle.aiHealth <= 0 || world.battle.playerHealth <= 0) {
             world.battle.playerWon = world.battle.aiHealth <= 0;
             world.battle.phase = BattlePhase::Resolved;
+
+            auto applyLosses = [](ArmyComponent& army) {
+                army.infantry = army.infantry / 2;
+                army.archers = army.archers / 2;
+                army.knights = army.knights / 2;
+            };
+
+            if (world.battle.playerWon) {
+                std::string defenderOwner = target->owner;
+                ArmyComponent& loser = world.armies.count(defenderOwner)
+                    ? world.armies[defenderOwner]
+                    : world.armies["neutral"];
+                applyLosses(loser);
+            } else {
+                applyLosses(world.armies[world.ctx.playerDynasty]);
+            }
+
             if (world.battle.playerWon) {
                 target->owner = world.ctx.playerDynasty;
                 world.ctx.score += 150;
