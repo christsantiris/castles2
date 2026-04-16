@@ -68,8 +68,10 @@ int main() {
 
             if (now - lastTick >= tickInterval) {
                 lastTick = now;
-                if (world.ctx.screen == GameScreen::Playing)
+                if (world.ctx.screen == GameScreen::Playing &&
+                    world.battle.phase == BattlePhase::None) {
                     GameSystem::tick(world);
+                }
 
                 if (world.battle.phase == BattlePhase::Resolved)
                     world.battle = BattleState{};

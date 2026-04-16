@@ -15,15 +15,14 @@ make run
 - Background music with toggle
 
 ## Roadmap
-- [ ] Advanced combat system (difficult)
 - [ ] Save/Load
-- [ ] Construct Castles (difficult)
 - [ ] Special Quests
 - [ ] Upkeep (paying and feeding troops)
 - [ ] Easy and Hard mode
 - [ ] Defeat view when player loses all provinces
 - [ ] Battle defeat — player and AI experience troop reductions after losing a battle
-- [ ] Game clock stop during simulated battle
+- [ ] Construct Castles (difficult)
+- [ ] Advanced combat system (difficult)
       
 <img width="2544" height="1644" alt="image" src="https://github.com/user-attachments/assets/fb244b2c-a6bd-4373-b3ba-8efdb8904e17" />
 
