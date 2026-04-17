@@ -7,6 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 #include "core/systems/ai_system.h"
 #include "core/systems/diplomacy_system.h"
+#include "core/systems/upkeep_system.h"
 
 static const int PANEL_X = 950;
 
@@ -46,9 +47,11 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
             if (state.difficulty == Difficulty::Hard) {
                 world.aiConfig = AISystem::hardConfig();
                 world.ctx.upkeepInterval = 45;
+                world.ctx.marchFoodFlat = 0;
             } else {
                 world.aiConfig = AISystem::easyConfig();
                 world.ctx.upkeepInterval = 120;
+                world.ctx.marchFoodFlat = 1;
             }
             AISystem::initAI(world, world.aiConfig);
             world.ctx.screen = GameScreen::Playing;
@@ -58,6 +61,21 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
     }
 
     static void handlePlayingClick(int x, int y, World& world, LandingState& state, Mix_Music* music) {
+        // Upkeep prompt clicks
+        if (world.ctx.upkeepDue) {
+            // PAY button: panelX+50=490, panelY+130=430, w=120, h=40
+            if (x >= 490 && x <= 610 && y >= 430 && y <= 470) {
+                if (world.resources.gold >= UpkeepSystem::cost(world)) {
+                    UpkeepSystem::pay(world);
+                }
+            }
+            // DESERT button: panelX+230=670, panelY+130=430, w=120, h=40
+            if (x >= 670 && x <= 790 && y >= 430 && y <= 470) {
+                UpkeepSystem::desert(world);
+            }
+            return;
+        }
+
         // Tab bar clicks
         if (x >= 950 && y >= 60) {
             int tabW = 330 / 4;

@@ -138,6 +138,7 @@ struct GameContext {
     int         upkeepCounter      = 0;
     bool        upkeepDue          = false;
     bool        paused             = false;
+    int         marchFoodFlat      = 1;
 };
 
 enum class BattlePhase { None, Preparing, Running, Paused, Resolved };
