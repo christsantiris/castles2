@@ -13,6 +13,7 @@
 #include "core/systems/combat_system.h"
 #include "renderer/victory_renderer.h"
 #include "renderer/defeat_renderer.h"
+#include "renderer/upkeep_renderer.h"
 #include "core/systems/hall_of_fame_system.h"
 #include "core/systems/date_system.h"
 #include "core/systems/ai_system.h"
@@ -95,6 +96,9 @@ int main() {
             PanelRenderer::render(renderer, font, world, landingState.musicOn);
             TopBarRenderer::render(renderer, font, world);
             BattleRenderer::render(renderer, font, world);
+            if (world.ctx.upkeepDue) {
+                UpkeepRenderer::render(renderer, font, world);
+            }
         } else if (world.ctx.screen == GameScreen::Victory) {
             MapRenderer::render(renderer, font, world);
             PanelRenderer::render(renderer, font, world, landingState.musicOn);

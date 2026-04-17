@@ -31,6 +31,18 @@ namespace CombatSystem {
         if (workers < 1) return false;
         if (workers > world.workerPool.availableMilitaryWorkers) return false;
 
+        const ArmyComponent& army = world.armies[world.ctx.playerDynasty];
+        int armySize = army.infantry + army.archers + army.knights;
+        int foodCost = (world.ctx.marchFoodFlat > 0)
+            ? world.ctx.marchFoodFlat
+            : (armySize + 1) / 2;
+        if (world.resources.food < foodCost) {
+            world.ctx.battleMessage = "Not enough food to march!";
+            world.ctx.battleMessageTimer = 5;
+            return false;
+        }
+        world.resources.food -= foodCost;
+
         auto* target = world.findProvince(targetProvinceId);
         bool isNeutral = target->owner == "neutral";
 

@@ -16,11 +16,10 @@ make run
 
 ## Roadmap
 - [ ] Save/Load
-- [ ] Attacking requires food to feed army
-- [ ] Easy and Hard mode
 - [ ] Installers for Mac, Linux, Windows
 - [ ] Trade resources through diplomacy tab
 - [ ] Special Quests
+- [ ] Sabateurs
 - [ ] Construct Castles (difficult)
 - [ ] Advanced combat system (difficult)
       
