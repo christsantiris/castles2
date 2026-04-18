@@ -7,6 +7,14 @@ A medieval strategy game of conquest, resource management, and diplomacy set in 
 make run
 ```
 
+## Dependencies
+
+Install all dependencies via Homebrew:
+
+```bash
+brew install sdl2 sdl2_ttf sdl2_mixer nlohmann-json catch2
+```
+
 ## Features
 - Turn-based date system with resource collection
 - Province conquest with animated combat progress
