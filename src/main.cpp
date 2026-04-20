@@ -17,6 +17,7 @@
 #include "core/systems/hall_of_fame_system.h"
 #include "core/systems/date_system.h"
 #include "core/systems/ai_system.h"
+#include "core/systems/save_load.h"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -113,6 +114,10 @@ int main() {
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
+    }
+
+    if (world.ctx.screen == GameScreen::Playing) {
+        SaveLoad::save_game(world, "data/savegame.json");
     }
 
     SDL_DestroyRenderer(renderer);

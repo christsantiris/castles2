@@ -528,8 +528,8 @@ namespace PanelRenderer {
         SDL_Color btnColors[] = {
             world.ctx.paused ? SDL_Color{0, 100, 0, 255} : SDL_Color{100, 80, 0, 255},
             {0, 80, 80, 255},
-            {50, 50, 50, 255},
-            {50, 50, 50, 255},
+            {0, 80, 50, 255},
+            {0, 60, 90, 255},
             {120, 0, 0, 255}
         };
 

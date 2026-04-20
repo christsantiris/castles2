@@ -1,5 +1,9 @@
 #include "input_handler.h"
+#include "../core/systems/save_load.h"
 #include "../core/systems/map_system.h"
+#include <dirent.h>
+#include <algorithm>
+#include <set>
 #include "../core/systems/game_system.h"
 #include "../core/systems/resource_system.h"
 #include "../core/systems/combat_system.h"
@@ -11,6 +15,64 @@
 #include "core/systems/trade_system.h"
 
 static const int PANEL_X = 950;
+
+static std::string osascriptResult(const std::string& cmd) {
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (!pipe) {
+        return "";
+    }
+    char buf[256] = {};
+    std::string result;
+    while (fgets(buf, sizeof(buf), pipe)) {
+        result += buf;
+    }
+    pclose(pipe);
+    while (!result.empty() && (result.back() == '\n' || result.back() == '\r')) {
+        result.pop_back();
+    }
+    return result;
+}
+
+static std::string promptFilename(const std::string& prompt, const std::string& defaultName) {
+    std::string cmd = "osascript -e 'text returned of (display dialog \"" + prompt + "\" "
+                      "default answer \"" + defaultName + "\" with title \"Castles III\")' 2>/dev/null";
+    return osascriptResult(cmd);
+}
+
+static std::string chooseSave(const std::string& prompt) {
+    static const std::set<std::string> excluded = {"map", "hall_of_fame"};
+    std::vector<std::string> saves;
+    DIR* dir = opendir("data");
+    if (dir) {
+        struct dirent* entry;
+        while ((entry = readdir(dir)) != nullptr) {
+            std::string name = entry->d_name;
+            if (name.size() > 5 && name.substr(name.size() - 5) == ".json") {
+                std::string stem = name.substr(0, name.size() - 5);
+                if (excluded.find(stem) == excluded.end()) {
+                    saves.push_back(stem);
+                }
+            }
+        }
+        closedir(dir);
+    }
+    if (saves.empty()) {
+        return "";
+    }
+    std::sort(saves.begin(), saves.end());
+    std::string items;
+    for (size_t i = 0; i < saves.size(); i++) {
+        if (i > 0) { items += ", "; }
+        items += "\"" + saves[i] + "\"";
+    }
+    std::string cmd = "osascript -e 'choose from list {" + items + "} "
+                      "with title \"Castles III\" with prompt \"" + prompt + "\"' 2>/dev/null";
+    std::string result = osascriptResult(cmd);
+    if (result == "false") {
+        return "";
+    }
+    return result;
+}
 
 namespace InputHandler {
 
@@ -56,6 +118,14 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
             }
             AISystem::initAI(world, world.aiConfig);
             world.ctx.screen = GameScreen::Playing;
+        }
+
+        // LOAD button
+        if (x >= 560 && x <= 640 && y >= 580 && y <= 620) {
+            std::string name = chooseSave("Choose a save to load:");
+            if (!name.empty()) {
+                SaveLoad::load_game(world, "data/" + name + ".json");
+            }
         }
 
         // EXIT handled in main
@@ -408,6 +478,24 @@ static void handleLandingClick(int x, int y, World& world, LandingState& state, 
                 state.musicOn = !state.musicOn;
                 if (state.musicOn) Mix_ResumeMusic();
                 else Mix_PauseMusic();
+            }
+
+            // Save Game button
+            if (x >= baseX && x <= baseX + 314 &&
+                y >= y0 + (2 * rowH) && y <= y0 + (2 * rowH) + 50) {
+                std::string name = promptFilename("Save file name:", "savegame");
+                if (!name.empty()) {
+                    SaveLoad::save_game(world, "data/" + name + ".json");
+                }
+            }
+
+            // Load Game button
+            if (x >= baseX && x <= baseX + 314 &&
+                y >= y0 + (3 * rowH) && y <= y0 + (3 * rowH) + 50) {
+                std::string name = chooseSave("Choose a save to load:");
+                if (!name.empty()) {
+                    SaveLoad::load_game(world, "data/" + name + ".json");
+                }
             }
 
             // Quit button
