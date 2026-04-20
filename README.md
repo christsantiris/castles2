@@ -12,7 +12,7 @@ make run
 Install all dependencies via Homebrew:
 
 ```bash
-brew install sdl2 sdl2_ttf sdl2_mixer nlohmann-json catch2
+brew install sdl2 sdl2_ttf sdl2_mixer nlohmann-json catch2 dylibbundler
 ```
 
 ## Features
@@ -24,7 +24,7 @@ brew install sdl2 sdl2_ttf sdl2_mixer nlohmann-json catch2
 
 ## Roadmap
 - [ ] Save/Load
-- [ ] Installers for Mac, Linux, Windows
+- [ ] Installers for Linux, Windows
 - [ ] Special Quests
 - [ ] Sabateurs
 - [ ] Construct Castles (difficult)
